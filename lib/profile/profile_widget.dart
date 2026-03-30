@@ -39,7 +39,10 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       _model.check = await MembershipSummaryViewTable().queryRows(
-        queryFn: (q) => q,
+        queryFn: (q) => q.eqOrNull(
+          'email',
+          currentUserEmail,
+        ),
       );
     });
 
@@ -57,7 +60,10 @@ class _ProfileWidgetState extends State<ProfileWidget> {
   Widget build(BuildContext context) {
     return FutureBuilder<List<MembershipSummaryViewRow>>(
       future: MembershipSummaryViewTable().querySingleRow(
-        queryFn: (q) => q,
+        queryFn: (q) => q.eqOrNull(
+          'email',
+          currentUserEmail,
+        ),
       ),
       builder: (context, snapshot) {
         // Customize what your widget looks like when it's loading.

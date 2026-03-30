@@ -31,7 +31,13 @@ class PartnerlistModel extends FlutterFlowModel<PartnerlistWidget> {
   FocusNode? textFieldFocusNode;
   TextEditingController? textController;
   String? Function(BuildContext, String?)? textControllerValidator;
-  Stream<List<MembershipSummaryViewRow>>? containerSupabaseStream;
+  // Pagination state
+  List<MembershipSummaryViewRow> partnerCache = [];
+  int offset = 0;
+  bool loading = false;
+  bool hasMore = true;
+  final int limit = 10;
+  String? lastSearch;
 
   @override
   void initState(BuildContext context) {}
@@ -40,5 +46,37 @@ class PartnerlistModel extends FlutterFlowModel<PartnerlistWidget> {
   void dispose() {
     textFieldFocusNode?.dispose();
     textController?.dispose();
+  }
+
+  Future fetchNextPage({bool isRefresh = false}) async {
+    if (loading || (!hasMore && !isRefresh)) return;
+    loading = true;
+    if (isRefresh) {
+      offset = 0;
+      partnerCache.clear();
+      hasMore = true;
+    }
+
+    final String? currentSearch = textController?.text;
+    final newRows = await MembershipSummaryViewTable().queryRows(
+      queryFn: (q) {
+        var query = q;
+        if (currentSearch != null && currentSearch.isNotEmpty) {
+          query = query.or(
+              "firstname.ilike.${'%$currentSearch%'}, lastname.ilike.${'%$currentSearch%'}, email.ilike.${'%$currentSearch%'}");
+        }
+        return query;
+      },
+      limit: limit,
+      offset: offset,
+    );
+
+    if (newRows.length < limit) {
+      hasMore = false;
+    }
+    partnerCache.addAll(newRows);
+    offset += newRows.length;
+    lastSearch = currentSearch;
+    loading = false;
   }
 }

@@ -29,6 +29,48 @@ class ListofprojectsModel extends FlutterFlowModel<ListofprojectsWidget> {
   TextEditingController? textController;
   String? Function(BuildContext, String?)? textControllerValidator;
 
+  // Pagination and caching state
+  List<ProjectsRow> projectCache = [];
+  bool loading = false;
+  int offset = 0;
+  final int limit = 10;
+  bool hasMore = true;
+
+  Future<void> fetchNextPage({bool isRefresh = false}) async {
+    if (isRefresh) {
+      offset = 0;
+      hasMore = true;
+      projectCache.clear();
+    }
+
+    if (!hasMore || loading) return;
+
+    loading = true;
+    try {
+      final searchTerm = textController?.text ?? '';
+      final rows = await ProjectsTable().queryRows(
+        queryFn: (q) {
+          var query = q;
+          if (searchTerm.isNotEmpty) {
+            query = query.ilike('title', '%$searchTerm%');
+          }
+          return query.order('created_at', ascending: false);
+        },
+        limit: limit,
+        offset: offset,
+      );
+
+      if (rows.length < limit) {
+        hasMore = false;
+      }
+
+      projectCache.addAll(rows);
+      offset += rows.length;
+    } finally {
+      loading = false;
+    }
+  }
+
   @override
   void initState(BuildContext context) {}
 

@@ -45,7 +45,10 @@ class _RewardsWidgetState extends State<RewardsWidget>
     _model.textController ??= TextEditingController();
     _model.textFieldFocusNode ??= FocusNode();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      await _model.fetchNextPage();
+      safeSetState(() {});
+    });
   }
 
   @override
@@ -208,7 +211,10 @@ class _RewardsWidgetState extends State<RewardsWidget>
                         onChanged: (_) => EasyDebounce.debounce(
                           '_model.textController',
                           Duration(milliseconds: 500),
-                          () => safeSetState(() {}),
+                          () async {
+                            await _model.fetchNextPage(isRefresh: true);
+                            safeSetState(() {});
+                          },
                         ),
                         obscureText: false,
                         decoration: InputDecoration(
@@ -263,6 +269,7 @@ class _RewardsWidgetState extends State<RewardsWidget>
                               ? InkWell(
                                   onTap: () async {
                                     _model.textController?.clear();
+                                    await _model.fetchNextPage(isRefresh: true);
                                     safeSetState(() {});
                                   },
                                   child: Icon(
@@ -289,494 +296,494 @@ class _RewardsWidgetState extends State<RewardsWidget>
               ),
               Expanded(
                 flex: 4,
-                child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        FutureBuilder<List<RewardsWithStatsRow>>(
-                          future: RewardsWithStatsTable().queryRows(
-                            queryFn: (q) => q.order('created_at'),
-                          ),
-                          builder: (context, snapshot) {
-                            // Customize what your widget looks like when it's loading.
-                            if (!snapshot.hasData) {
-                              return Center(
-                                child: SizedBox(
-                                  width: 24.0,
-                                  height: 24.0,
-                                  child: SpinKitFadingCube(
-                                    color: FlutterFlowTheme.of(context).primary,
-                                    size: 24.0,
-                                  ),
+                child: Builder(
+                  builder: (context) {
+                    final rewards = _model.rewardCache;
+
+                    if (rewards.isEmpty) {
+                      return Center(
+                        child: _model.loading
+                            ? SizedBox(
+                                width: 24.0,
+                                height: 24.0,
+                                child: SpinKitFadingCube(
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  size: 24.0,
                                 ),
-                              );
-                            }
-                            List<RewardsWithStatsRow>
-                                columnRewardsWithStatsRowList = snapshot.data!;
+                              )
+                            : EmptyWidget(),
+                      );
+                    }
 
-                            if (columnRewardsWithStatsRowList.isEmpty) {
-                              return const Center(child: EmptyWidget());
-                            }
-
-                            return Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: List.generate(
-                                  columnRewardsWithStatsRowList.length,
-                                  (columnIndex) {
-                                final columnRewardsWithStatsRow =
-                                    columnRewardsWithStatsRowList[columnIndex];
-                                return Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 0.0, 0.0, 1.0),
-                                  child: InkWell(
-                                    splashColor: Colors.transparent,
-                                    focusColor: Colors.transparent,
-                                    hoverColor: Colors.transparent,
-                                    highlightColor: Colors.transparent,
-                                    onTap: () async {
-                                      context.pushNamed(
-                                        RewarddetailsWidget.routeName,
-                                        queryParameters: {
-                                          'id': serializeParam(
-                                            columnRewardsWithStatsRow.id,
-                                            ParamType.String,
+                    return RefreshIndicator(
+                      onRefresh: () async {
+                        await _model.fetchNextPage(isRefresh: true);
+                        safeSetState(() {});
+                      },
+                      child: SingleChildScrollView(
+                        physics: AlwaysScrollableScrollPhysics(),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ...List.generate(rewards.length, (columnIndex) {
+                              final columnRewardsWithStatsRow =
+                                  rewards[columnIndex];
+                              return Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 0.0, 0.0, 1.0),
+                                child: InkWell(
+                                  splashColor: Colors.transparent,
+                                  focusColor: Colors.transparent,
+                                  hoverColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  onTap: () async {
+                                    context.pushNamed(
+                                      RewarddetailsWidget.routeName,
+                                      queryParameters: {
+                                        'id': serializeParam(
+                                          columnRewardsWithStatsRow.id,
+                                          ParamType.String,
+                                        ),
+                                      }.withoutNulls,
+                                    );
+                                  },
+                                  child: Container(
+                                    width: MediaQuery.sizeOf(context).width *
+                                        1.0,
+                                    decoration: BoxDecoration(
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryBackground,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          blurRadius: 0.0,
+                                          color: FlutterFlowTheme.of(context)
+                                              .alternate,
+                                          offset: Offset(
+                                            0.0,
+                                            1.0,
                                           ),
-                                        }.withoutNulls,
-                                      );
-                                    },
-                                    child: Container(
-                                      width: MediaQuery.sizeOf(context).width *
-                                          1.0,
-                                      decoration: BoxDecoration(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryBackground,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            blurRadius: 0.0,
-                                            color: FlutterFlowTheme.of(context)
-                                                .alternate,
-                                            offset: Offset(
-                                              0.0,
-                                              1.0,
-                                            ),
-                                          )
-                                        ],
-                                        borderRadius:
-                                            BorderRadius.circular(18.0),
-                                      ),
-                                      child: Padding(
-                                        padding: EdgeInsets.all(12.0),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          children: [
-                                            Column(
-                                              mainAxisSize: MainAxisSize.max,
-                                              children: [
-                                                if (columnRewardsWithStatsRow
-                                                        .rewardType ==
-                                                    'pdf')
-                                                  Container(
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.0),
-                                                      child: Image.asset(
-                                                        'assets/images/image-diXhCtmvrDrnGWIrgC6kIFZe6Zg9CL.webp',
-                                                        width: 40.0,
-                                                        height: 40.0,
-                                                        fit: BoxFit.fill,
-                                                      ),
+                                        )
+                                      ],
+                                      borderRadius:
+                                          BorderRadius.circular(18.0),
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(12.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              if (columnRewardsWithStatsRow
+                                                      .rewardType ==
+                                                  'pdf')
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          0.0, 0.0),
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8.0),
+                                                    child: Image.asset(
+                                                      'assets/images/image-diXhCtmvrDrnGWIrgC6kIFZe6Zg9CL.webp',
+                                                      width: 40.0,
+                                                      height: 40.0,
+                                                      fit: BoxFit.fill,
                                                     ),
                                                   ),
-                                                if (columnRewardsWithStatsRow
-                                                        .rewardType ==
-                                                    'ticket')
-                                                  Container(
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              12.0),
-                                                    ),
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.0),
-                                                      child: Image.asset(
-                                                        'assets/images/image-NA5KNVf0B0ZL38c6nyAlLrWPV7y0Gd.webp',
-                                                        width: 40.0,
-                                                        height: 40.0,
-                                                        fit: BoxFit.cover,
-                                                      ),
+                                                ),
+                                              if (columnRewardsWithStatsRow
+                                                      .rewardType ==
+                                                  'ticket')
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12.0),
+                                                  ),
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          0.0, 0.0),
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8.0),
+                                                    child: Image.asset(
+                                                      'assets/images/image-NA5KNVf0B0ZL38c6nyAlLrWPV7y0Gd.webp',
+                                                      width: 40.0,
+                                                      height: 40.0,
+                                                      fit: BoxFit.cover,
                                                     ),
                                                   ),
-                                                if (columnRewardsWithStatsRow
-                                                        .rewardType ==
-                                                    'content')
-                                                  Container(
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              12.0),
-                                                    ),
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.0),
-                                                      child: Image.asset(
-                                                        'assets/images/image-NRu4z2biW2PxBnf6agPBkk3XHG3WTZ.webp',
-                                                        width: 40.0,
-                                                        height: 40.0,
-                                                        fit: BoxFit.fill,
-                                                      ),
+                                                ),
+                                              if (columnRewardsWithStatsRow
+                                                      .rewardType ==
+                                                  'content')
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12.0),
+                                                  ),
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          0.0, 0.0),
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8.0),
+                                                    child: Image.asset(
+                                                      'assets/images/image-NRu4z2biW2PxBnf6agPBkk3XHG3WTZ.webp',
+                                                      width: 40.0,
+                                                      height: 40.0,
+                                                      fit: BoxFit.fill,
                                                     ),
                                                   ),
-                                                if (columnRewardsWithStatsRow
-                                                        .rewardType ==
-                                                    'media')
-                                                  Container(
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              12.0),
-                                                    ),
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, 0.0),
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.0),
-                                                      child: Image.asset(
-                                                        'assets/images/image-DNaKSDV2Vm6rz8yKS6WtuJwy4rLZwh.webp',
-                                                        width: 40.0,
-                                                        height: 40.0,
-                                                        fit: BoxFit.fill,
-                                                      ),
+                                                ),
+                                              if (columnRewardsWithStatsRow
+                                                      .rewardType ==
+                                                  'media')
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12.0),
+                                                  ),
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          0.0, 0.0),
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8.0),
+                                                    child: Image.asset(
+                                                      'assets/images/image-DNaKSDV2Vm6rz8yKS6WtuJwy4rLZwh.webp',
+                                                      width: 40.0,
+                                                      height: 40.0,
+                                                      fit: BoxFit.fill,
                                                     ),
                                                   ),
-                                              ],
-                                            ),
-                                            Expanded(
-                                              flex: 2,
-                                              child: Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        8.0, 0.0, 0.0, 0.0),
-                                                child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    AutoSizeText(
-                                                      valueOrDefault<String>(
-                                                        columnRewardsWithStatsRow
-                                                            .title,
-                                                        'null',
-                                                      ),
-                                                      maxLines: 2,
-                                                      minFontSize: 14.0,
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .titleMedium
-                                                              .override(
-                                                                fontFamily: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .titleMediumFamily,
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .primaryText,
-                                                                fontSize: 14.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                useGoogleFonts:
-                                                                    !FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .titleMediumIsCustom,
-                                                              ),
+                                                ),
+                                            ],
+                                          ),
+                                          Expanded(
+                                            flex: 2,
+                                            child: Padding(
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(
+                                                      8.0, 0.0, 0.0, 0.0),
+                                              child: Column(
+                                                mainAxisSize:
+                                                    MainAxisSize.max,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  AutoSizeText(
+                                                    valueOrDefault<String>(
+                                                      columnRewardsWithStatsRow
+                                                          .title,
+                                                      'null',
                                                     ),
-                                                    Row(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        if (columnRewardsWithStatsRow
-                                                                .rewardType ==
-                                                            'pdf')
-                                                          Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: Color(
-                                                                  0x2ED79A0F),
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          6.0),
+                                                    maxLines: 2,
+                                                    minFontSize: 14.0,
+                                                    style:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .titleMedium
+                                                            .override(
+                                                              fontFamily: FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .titleMediumFamily,
+                                                              color: FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .primaryText,
+                                                              fontSize: 14.0,
+                                                              letterSpacing:
+                                                                  0.0,
+                                                              useGoogleFonts:
+                                                                  !FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .titleMediumIsCustom,
                                                             ),
-                                                            child: Padding(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .all(6.0),
-                                                              child: Text(
-                                                                'PDF',
-                                                                style: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .labelMedium
-                                                                    .override(
-                                                                      fontFamily:
-                                                                          FlutterFlowTheme.of(context)
-                                                                              .labelMediumFamily,
-                                                                      color: Color(
-                                                                          0xFF542B05),
-                                                                      fontSize:
-                                                                          10.0,
-                                                                      letterSpacing:
-                                                                          0.0,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w600,
-                                                                      useGoogleFonts:
-                                                                          !FlutterFlowTheme.of(context)
-                                                                              .labelMediumIsCustom,
-                                                                    ),
-                                                              ),
-                                                            ),
+                                                  ),
+                                                  Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      if (columnRewardsWithStatsRow
+                                                              .rewardType ==
+                                                          'pdf')
+                                                        Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Color(
+                                                                0x2ED79A0F),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        6.0),
                                                           ),
-                                                        if (columnRewardsWithStatsRow
-                                                                .rewardType ==
-                                                            'ticket')
-                                                          Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: Color(
-                                                                  0x2ED79A0F),
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          6.0),
-                                                            ),
-                                                            child: Padding(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .all(6.0),
-                                                              child: Text(
-                                                                'Ticket',
-                                                                style: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .labelMedium
-                                                                    .override(
-                                                                      fontFamily:
-                                                                          FlutterFlowTheme.of(context)
-                                                                              .labelMediumFamily,
-                                                                      color: Color(
-                                                                          0xFF542B05),
-                                                                      fontSize:
-                                                                          10.0,
-                                                                      letterSpacing:
-                                                                          0.0,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w600,
-                                                                      useGoogleFonts:
-                                                                          !FlutterFlowTheme.of(context)
-                                                                              .labelMediumIsCustom,
-                                                                    ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        if (columnRewardsWithStatsRow
-                                                                .rewardType ==
-                                                            'content')
-                                                          Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: Color(
-                                                                  0x2E0FD770),
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          6.0),
-                                                            ),
-                                                            child: Padding(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .all(6.0),
-                                                              child: Text(
-                                                                'Content',
-                                                                style: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .labelMedium
-                                                                    .override(
-                                                                      fontFamily:
-                                                                          FlutterFlowTheme.of(context)
-                                                                              .labelMediumFamily,
-                                                                      color: Color(
-                                                                          0xFF05542C),
-                                                                      fontSize:
-                                                                          10.0,
-                                                                      letterSpacing:
-                                                                          0.0,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w600,
-                                                                      useGoogleFonts:
-                                                                          !FlutterFlowTheme.of(context)
-                                                                              .labelMediumIsCustom,
-                                                                    ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        if (columnRewardsWithStatsRow
-                                                                .rewardType ==
-                                                            'media')
-                                                          Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: Color(
-                                                                  0xFFE3E3E3),
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          6.0),
-                                                            ),
-                                                            child: Padding(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .all(6.0),
-                                                              child: Text(
-                                                                'Media',
-                                                                style: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .labelMedium
-                                                                    .override(
-                                                                      fontFamily:
-                                                                          FlutterFlowTheme.of(context)
-                                                                              .labelMediumFamily,
-                                                                      fontSize:
-                                                                          10.0,
-                                                                      letterSpacing:
-                                                                          0.0,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w600,
-                                                                      useGoogleFonts:
-                                                                          !FlutterFlowTheme.of(context)
-                                                                              .labelMediumIsCustom,
-                                                                    ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        FutureBuilder<
-                                                            List<RewardsRow>>(
-                                                          future: RewardsTable()
-                                                              .querySingleRow(
-                                                            queryFn: (q) =>
-                                                                q.eqOrNull(
-                                                              'id',
-                                                              columnRewardsWithStatsRow
-                                                                  .id,
-                                                            ),
-                                                          ),
-                                                          builder: (context,
-                                                              snapshot) {
-                                                            // Customize what your widget looks like when it's loading.
-                                                            if (!snapshot
-                                                                .hasData) {
-                                                              return Center(
-                                                                child: SizedBox(
-                                                                  width: 24.0,
-                                                                  height: 24.0,
-                                                                  child:
-                                                                      SpinKitFadingCube(
-                                                                    color: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .primary,
-                                                                    size: 24.0,
-                                                                  ),
-                                                                ),
-                                                              );
-                                                            }
-                                                            List<RewardsRow>
-                                                                textRewardsRowList =
-                                                                snapshot.data!;
-
-                                                            final textRewardsRow =
-                                                                textRewardsRowList
-                                                                        .isNotEmpty
-                                                                    ? textRewardsRowList
-                                                                        .first
-                                                                    : null;
-
-                                                            return Text(
-                                                              dateTimeFormat(
-                                                                  "MMMEd",
-                                                                  textRewardsRow!
-                                                                      .createdAt),
-                                                              style: FlutterFlowTheme
-                                                                      .of(context)
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsets
+                                                                    .all(6.0),
+                                                            child: Text(
+                                                              'PDF',
+                                                              style: FlutterFlowTheme.of(
+                                                                      context)
                                                                   .labelMedium
                                                                   .override(
                                                                     fontFamily:
                                                                         FlutterFlowTheme.of(context)
                                                                             .labelMediumFamily,
-                                                                    color: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .secondaryText,
+                                                                    color: Color(
+                                                                        0xFF542B05),
                                                                     fontSize:
                                                                         10.0,
                                                                     letterSpacing:
                                                                         0.0,
                                                                     fontWeight:
                                                                         FontWeight
-                                                                            .normal,
+                                                                            .w600,
                                                                     useGoogleFonts:
                                                                         !FlutterFlowTheme.of(context)
                                                                             .labelMediumIsCustom,
                                                                   ),
-                                                            );
-                                                          },
+                                                            ),
+                                                          ),
                                                         ),
-                                                      ].divide(
-                                                          SizedBox(width: 4.0)),
-                                                    ),
-                                                  ].divide(
-                                                      SizedBox(height: 4.0)),
-                                                ),
+                                                      if (columnRewardsWithStatsRow
+                                                              .rewardType ==
+                                                          'ticket')
+                                                        Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Color(
+                                                                0x2ED79A0F),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        6.0),
+                                                          ),
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsets
+                                                                    .all(6.0),
+                                                            child: Text(
+                                                              'Ticket',
+                                                              style: FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .labelMedium
+                                                                  .override(
+                                                                    fontFamily:
+                                                                        FlutterFlowTheme.of(context)
+                                                                            .labelMediumFamily,
+                                                                    color: Color(
+                                                                        0xFF542B05),
+                                                                    fontSize:
+                                                                        10.0,
+                                                                    letterSpacing:
+                                                                        0.0,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                    useGoogleFonts:
+                                                                        !FlutterFlowTheme.of(context)
+                                                                            .labelMediumIsCustom,
+                                                                  ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      if (columnRewardsWithStatsRow
+                                                              .rewardType ==
+                                                          'content')
+                                                        Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Color(
+                                                                0x2E0FD770),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        6.0),
+                                                          ),
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsets
+                                                                    .all(6.0),
+                                                            child: Text(
+                                                              'Content',
+                                                              style: FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .labelMedium
+                                                                  .override(
+                                                                    fontFamily:
+                                                                        FlutterFlowTheme.of(context)
+                                                                            .labelMediumFamily,
+                                                                    color: Color(
+                                                                        0xFF05542C),
+                                                                    fontSize:
+                                                                        10.0,
+                                                                    letterSpacing:
+                                                                        0.0,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                    useGoogleFonts:
+                                                                        !FlutterFlowTheme.of(context)
+                                                                            .labelMediumIsCustom,
+                                                                  ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      if (columnRewardsWithStatsRow
+                                                              .rewardType ==
+                                                          'media')
+                                                        Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Color(
+                                                                0xFFE3E3E3),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        6.0),
+                                                          ),
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsets
+                                                                    .all(6.0),
+                                                            child: Text(
+                                                              'Media',
+                                                              style: FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .labelMedium
+                                                                  .override(
+                                                                    fontFamily:
+                                                                        FlutterFlowTheme.of(context)
+                                                                            .labelMediumFamily,
+                                                                    fontSize:
+                                                                        10.0,
+                                                                    letterSpacing:
+                                                                        0.0,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                    useGoogleFonts:
+                                                                        !FlutterFlowTheme.of(context)
+                                                                            .labelMediumIsCustom,
+                                                                  ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      Text(
+                                                        dateTimeFormat(
+                                                            "MMMEd",
+                                                            columnRewardsWithStatsRow
+                                                                .createdAt),
+                                                        style: FlutterFlowTheme
+                                                                .of(context)
+                                                            .labelMedium
+                                                            .override(
+                                                              fontFamily:
+                                                                  FlutterFlowTheme.of(context)
+                                                                      .labelMediumFamily,
+                                                              color: FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .secondaryText,
+                                                              fontSize:
+                                                                  10.0,
+                                                              letterSpacing:
+                                                                  0.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                              useGoogleFonts:
+                                                                  !FlutterFlowTheme.of(context)
+                                                                      .labelMediumIsCustom,
+                                                            ),
+                                                      ),
+                                                    ].divide(
+                                                        SizedBox(width: 4.0)),
+                                                  ),
+                                                ].divide(
+                                                    SizedBox(height: 4.0)),
                                               ),
                                             ),
-                                          ].divide(SizedBox(width: 8.0)),
-                                        ),
+                                          ),
+                                        ].divide(SizedBox(width: 8.0)),
                                       ),
                                     ),
                                   ),
-                                );
-                              }).divide(SizedBox(height: 10.0)),
-                            );
-                          },
+                                ),
+                              );
+                            }).divide(SizedBox(height: 10.0)),
+                            if (_model.hasMore)
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 16.0, 0.0, 16.0),
+                                child: Center(
+                                  child: FFButtonWidget(
+                                    onPressed: () async {
+                                      await _model.fetchNextPage();
+                                      safeSetState(() {});
+                                    },
+                                    text: 'Load More',
+                                    options: FFButtonOptions(
+                                      width: 150.0,
+                                      height: 40.0,
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0.0, 0.0, 0.0, 0.0),
+                                      iconPadding:
+                                          EdgeInsetsDirectional.fromSTEB(
+                                              0.0, 0.0, 0.0, 0.0),
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      textStyle: FlutterFlowTheme.of(context)
+                                          .titleSmall
+                                          .override(
+                                            fontFamily:
+                                                FlutterFlowTheme.of(context)
+                                                    .titleSmallFamily,
+                                            color: Colors.white,
+                                            letterSpacing: 0.0,
+                                            useGoogleFonts:
+                                                !FlutterFlowTheme.of(context)
+                                                    .titleSmallIsCustom,
+                                          ),
+                                      elevation: 2.0,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            if (_model.loading && _model.rewardCache.isNotEmpty)
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 16.0, 0.0, 16.0),
+                                child: Center(
+                                  child: SpinKitFadingCube(
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    size: 24.0,
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
-                      ].divide(SizedBox(height: 8.0)),
-                    ),
-                  ),
+                      ),
+                    );
+                  },
                 ),
               ),
             ],

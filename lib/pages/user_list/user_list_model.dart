@@ -31,7 +31,13 @@ class UserListModel extends FlutterFlowModel<UserListWidget> {
   FocusNode? textFieldFocusNode;
   TextEditingController? textController;
   String? Function(BuildContext, String?)? textControllerValidator;
-  Stream<List<ChurchMembersRow>>? listViewSupabaseStream;
+
+  // Pagination and caching state
+  List<ChurchMembersRow> memberCache = [];
+  bool isLoading = false;
+  bool hasMore = true;
+  int offset = 0;
+  final int limit = 10;
 
   @override
   void initState(BuildContext context) {}
@@ -40,5 +46,45 @@ class UserListModel extends FlutterFlowModel<UserListWidget> {
   void dispose() {
     textFieldFocusNode?.dispose();
     textController?.dispose();
+  }
+
+  Future fetchNextPage({bool isRefresh = false}) async {
+    if (isRefresh) {
+      offset = 0;
+      hasMore = true;
+      memberCache = [];
+    }
+
+    if (!hasMore || isLoading) return;
+
+    isLoading = true;
+
+    try {
+      final String? search = textController?.text;
+      final results = await ChurchMembersTable().queryRows(
+        queryFn: (q) {
+          var query = q;
+          if (search != null && search.isNotEmpty) {
+            query = query.or(
+                "firstname.ilike.%$search%,lastname.ilike.%$search%,phone_number.ilike.%$search%");
+          }
+          return query.order('id', ascending: false);
+        },
+        limit: limit,
+        offset: offset,
+      );
+
+      if (results.length < limit) {
+        hasMore = false;
+      }
+
+      memberCache.addAll(results);
+      offset += limit;
+    } catch (e) {
+      debugPrint('Error fetching members: $e');
+      hasMore = false;
+    } finally {
+      isLoading = false;
+    }
   }
 }

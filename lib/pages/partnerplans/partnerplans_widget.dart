@@ -4,7 +4,7 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/pages/create_proj/create_proj_widget.dart';
+import '/pages/create_plan/create_plan_widget.dart';
 import 'dart:math';
 import 'dart:ui';
 import '/flutter_flow/custom_functions.dart' as functions;
@@ -42,6 +42,9 @@ class _PartnerplansWidgetState extends State<PartnerplansWidget>
   void initState() {
     super.initState();
     _model = createModel(context, () => PartnerplansModel());
+
+    // Initial fetch
+    _model.fetchNextPage().then((_) => safeSetState(() {}));
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
@@ -154,7 +157,7 @@ class _PartnerplansWidgetState extends State<PartnerplansWidget>
                                           height: MediaQuery.sizeOf(context)
                                                   .height *
                                               1.0,
-                                          child: CreateProjWidget(),
+                                          child: CreatePlanWidget(),
                                         ),
                                       ),
                                     ),
@@ -211,13 +214,10 @@ class _PartnerplansWidgetState extends State<PartnerplansWidget>
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        FutureBuilder<List<PartnershipPlanStatusSummaryRow>>(
-                          future: PartnershipPlanStatusSummaryTable().queryRows(
-                            queryFn: (q) => q,
-                          ),
-                          builder: (context, snapshot) {
-                            // Customize what your widget looks like when it's loading.
-                            if (!snapshot.hasData) {
+                        Builder(
+                          builder: (context) {
+                            final plansCache = _model.plansCache;
+                            if (plansCache == null && _model.isLoading) {
                               return Center(
                                 child: SizedBox(
                                   width: 24.0,
@@ -229,369 +229,426 @@ class _PartnerplansWidgetState extends State<PartnerplansWidget>
                                 ),
                               );
                             }
-                            List<PartnershipPlanStatusSummaryRow>
-                                columnPartnershipPlanStatusSummaryRowList =
-                                snapshot.data!;
 
-                            if (columnPartnershipPlanStatusSummaryRowList.isEmpty) {
+                            if (plansCache == null || plansCache.isEmpty) {
                               return const Center(child: EmptyWidget());
                             }
 
                             return Column(
                               mainAxisSize: MainAxisSize.max,
-                              children: List.generate(
-                                  columnPartnershipPlanStatusSummaryRowList
-                                      .length, (columnIndex) {
-                                final columnPartnershipPlanStatusSummaryRow =
-                                    columnPartnershipPlanStatusSummaryRowList[
-                                        columnIndex];
-                                return Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 0.0, 0.0, 1.0),
-                                  child: InkWell(
-                                    splashColor: Colors.transparent,
-                                    focusColor: Colors.transparent,
-                                    hoverColor: Colors.transparent,
-                                    highlightColor: Colors.transparent,
-                                    onTap: () async {
-                                      context.pushNamed(
-                                        PlandetailsWidget.routeName,
-                                        queryParameters: {
-                                          'id': serializeParam(
-                                            columnPartnershipPlanStatusSummaryRow
-                                                .partnershipPlanId,
-                                            ParamType.String,
-                                          ),
-                                        }.withoutNulls,
-                                      );
-                                    },
-                                    child: Container(
-                                      width: MediaQuery.sizeOf(context).width *
-                                          1.0,
-                                      decoration: BoxDecoration(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryBackground,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            blurRadius: 0.0,
-                                            color: FlutterFlowTheme.of(context)
-                                                .alternate,
-                                            offset: Offset(
-                                              0.0,
-                                              1.0,
+                              children: [
+                                ...List.generate(plansCache.length,
+                                    (columnIndex) {
+                                  final columnRow = plansCache[columnIndex];
+                                  return Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 0.0, 1.0),
+                                    child: InkWell(
+                                      splashColor: Colors.transparent,
+                                      focusColor: Colors.transparent,
+                                      hoverColor: Colors.transparent,
+                                      highlightColor: Colors.transparent,
+                                      onTap: () async {
+                                        context.pushNamed(
+                                          PlandetailsWidget.routeName,
+                                          queryParameters: {
+                                            'id': serializeParam(
+                                              columnRow.partnershipPlanId,
+                                              ParamType.String,
                                             ),
-                                          )
-                                        ],
-                                        borderRadius:
-                                            BorderRadius.circular(18.0),
-                                      ),
-                                      child: Padding(
-                                        padding: EdgeInsets.all(12.0),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          children: [
-                                            Expanded(
-                                              flex: 2,
-                                              child: Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        8.0, 0.0, 0.0, 0.0),
-                                                child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      '${valueOrDefault<String>(
-                                                        functions.safeCurrency(
-                                                            columnPartnershipPlanStatusSummaryRow
-                                                                .amountLOW!
-                                                                .toDouble(),
-                                                            FFAppState()
-                                                                .currency),
-                                                        '0.00',
-                                                      )} - ${valueOrDefault<String>(
-                                                        functions.safeCurrency(
-                                                            columnPartnershipPlanStatusSummaryRow
-                                                                .amountHIGH!
-                                                                .toDouble(),
-                                                            FFAppState()
-                                                                .currency),
-                                                        '0.00',
-                                                      )}',
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .labelMedium
-                                                          .override(
-                                                            fontFamily:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .labelMediumFamily,
-                                                            color: Color(
-                                                                0xFF542B05),
-                                                            fontSize: 10.0,
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            useGoogleFonts:
-                                                                !FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .labelMediumIsCustom,
-                                                          ),
-                                                    ),
-                                                    AutoSizeText(
-                                                      valueOrDefault<String>(
-                                                        columnPartnershipPlanStatusSummaryRow
-                                                            .planTitle,
-                                                        'null',
+                                          }.withoutNulls,
+                                        );
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.sizeOf(context).width *
+                                                1.0,
+                                        decoration: BoxDecoration(
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryBackground,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              blurRadius: 0.0,
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .alternate,
+                                              offset: Offset(
+                                                0.0,
+                                                1.0,
+                                              ),
+                                            )
+                                          ],
+                                          borderRadius:
+                                              BorderRadius.circular(18.0),
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsets.all(12.0),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Expanded(
+                                                flex: 2,
+                                                child: Padding(
+                                                  padding:
+                                                      EdgeInsetsDirectional
+                                                          .fromSTEB(8.0, 0.0,
+                                                              0.0, 0.0),
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        '${valueOrDefault<String>(
+                                                          functions
+                                                              .safeCurrency(
+                                                                  columnRow
+                                                                      .amountLOW!
+                                                                      .toDouble(),
+                                                                  FFAppState()
+                                                                      .currency),
+                                                          '0.00',
+                                                        )} - ${valueOrDefault<String>(
+                                                          functions
+                                                              .safeCurrency(
+                                                                  columnRow
+                                                                      .amountHIGH!
+                                                                      .toDouble(),
+                                                                  FFAppState()
+                                                                      .currency),
+                                                          '0.00',
+                                                        )}',
+                                                        style: FlutterFlowTheme
+                                                                .of(context)
+                                                            .labelMedium
+                                                            .override(
+                                                              fontFamily:
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .labelMediumFamily,
+                                                              color: Color(
+                                                                  0xFF542B05),
+                                                              fontSize: 10.0,
+                                                              letterSpacing:
+                                                                  0.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              useGoogleFonts:
+                                                                  !FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .labelMediumIsCustom,
+                                                            ),
                                                       ),
-                                                      maxLines: 2,
-                                                      minFontSize: 14.0,
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .titleMedium
-                                                              .override(
-                                                                fontFamily: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .titleMediumFamily,
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .primaryText,
-                                                                fontSize: 14.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                useGoogleFonts:
-                                                                    !FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .titleMediumIsCustom,
-                                                              ),
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0,
-                                                                  8.0),
-                                                      child: RichText(
-                                                        textScaler:
-                                                            MediaQuery.of(
+                                                      AutoSizeText(
+                                                        valueOrDefault<String>(
+                                                          columnRow.planTitle,
+                                                          'null',
+                                                        ),
+                                                        maxLines: 2,
+                                                        minFontSize: 14.0,
+                                                        style:
+                                                            FlutterFlowTheme.of(
                                                                     context)
-                                                                .textScaler,
-                                                        text: TextSpan(
-                                                          children: [
-                                                            TextSpan(
-                                                              text: columnPartnershipPlanStatusSummaryRow
-                                                                  .description!,
-                                                              style: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .bodyMedium
-                                                                  .override(
-                                                                    fontFamily:
-                                                                        FlutterFlowTheme.of(context)
-                                                                            .bodyMediumFamily,
-                                                                    fontSize:
-                                                                        12.0,
-                                                                    letterSpacing:
-                                                                        0.0,
-                                                                    useGoogleFonts:
-                                                                        !FlutterFlowTheme.of(context)
-                                                                            .bodyMediumIsCustom,
-                                                                  ),
-                                                            )
-                                                          ],
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                fontFamily: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMediumFamily,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                lineHeight: 1.3,
-                                                                useGoogleFonts:
-                                                                    !FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .bodyMediumIsCustom,
-                                                              ),
-                                                        ),
-                                                        maxLines: 3,
+                                                                .titleMedium
+                                                                .override(
+                                                                  fontFamily:
+                                                                      FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .titleMediumFamily,
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .primaryText,
+                                                                  fontSize:
+                                                                      14.0,
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  useGoogleFonts:
+                                                                      !FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .titleMediumIsCustom,
+                                                                ),
                                                       ),
-                                                    ),
-                                                    Row(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: Color(
-                                                                0x2E0FD770),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        6.0),
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    8.0),
+                                                        child: RichText(
+                                                          textScaler:
+                                                              MediaQuery.of(
+                                                                      context)
+                                                                  .textScaler,
+                                                          text: TextSpan(
+                                                            children: [
+                                                              TextSpan(
+                                                                text: columnRow
+                                                                    .description!,
+                                                                style: FlutterFlowTheme
+                                                                        .of(context)
+                                                                    .bodyMedium
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          FlutterFlowTheme.of(context)
+                                                                              .bodyMediumFamily,
+                                                                      fontSize:
+                                                                          12.0,
+                                                                      letterSpacing:
+                                                                          0.0,
+                                                                      useGoogleFonts:
+                                                                          !FlutterFlowTheme.of(context)
+                                                                              .bodyMediumIsCustom,
+                                                                    ),
+                                                              )
+                                                            ],
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .bodyMedium
+                                                                .override(
+                                                                  fontFamily:
+                                                                      FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyMediumFamily,
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  lineHeight:
+                                                                      1.3,
+                                                                  useGoogleFonts:
+                                                                      !FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyMediumIsCustom,
+                                                                ),
                                                           ),
-                                                          child: Padding(
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    6.0),
-                                                            child: Text(
-                                                              '${formatNumber(
-                                                                columnPartnershipPlanStatusSummaryRow
-                                                                    .activeSubscribers,
-                                                                formatType:
-                                                                    FormatType
-                                                                        .custom,
-                                                                format: '#,###',
-                                                                locale: 'en',
-                                                              )} Active',
-                                                              style: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .labelMedium
-                                                                  .override(
-                                                                    fontFamily:
-                                                                        FlutterFlowTheme.of(context)
-                                                                            .labelMediumFamily,
-                                                                    color: Color(
-                                                                        0xFF05542C),
-                                                                    fontSize:
-                                                                        10.0,
-                                                                    letterSpacing:
-                                                                        0.0,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                    useGoogleFonts:
-                                                                        !FlutterFlowTheme.of(context)
-                                                                            .labelMediumIsCustom,
-                                                                  ),
+                                                          maxLines: 3,
+                                                        ),
+                                                      ),
+                                                      Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.max,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: Color(
+                                                                  0x2E0FD770),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          6.0),
+                                                            ),
+                                                            child: Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(6.0),
+                                                              child: Text(
+                                                                '${formatNumber(
+                                                                  columnRow
+                                                                      .activeSubscribers,
+                                                                  formatType:
+                                                                      FormatType
+                                                                          .custom,
+                                                                  format:
+                                                                      '#,###',
+                                                                  locale: 'en',
+                                                                )} Active',
+                                                                style: FlutterFlowTheme
+                                                                        .of(context)
+                                                                    .labelMedium
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          FlutterFlowTheme.of(context)
+                                                                              .labelMediumFamily,
+                                                                      color: Color(
+                                                                          0xFF05542C),
+                                                                      fontSize:
+                                                                          10.0,
+                                                                      letterSpacing:
+                                                                          0.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                      useGoogleFonts:
+                                                                          !FlutterFlowTheme.of(context)
+                                                                              .labelMediumIsCustom,
+                                                                    ),
+                                                              ),
                                                             ),
                                                           ),
-                                                        ),
-                                                        Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: Color(
-                                                                0x2ED79A0F),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        6.0),
-                                                          ),
-                                                          child: Padding(
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    6.0),
-                                                            child: Text(
-                                                              '${formatNumber(
-                                                                columnPartnershipPlanStatusSummaryRow
-                                                                    .pastDueSubscribers,
-                                                                formatType:
-                                                                    FormatType
-                                                                        .custom,
-                                                                format: '#,###',
-                                                                locale: 'en',
-                                                              )} Expired',
-                                                              style: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .labelMedium
-                                                                  .override(
-                                                                    fontFamily:
-                                                                        FlutterFlowTheme.of(context)
-                                                                            .labelMediumFamily,
-                                                                    color: Color(
-                                                                        0xFF542B05),
-                                                                    fontSize:
-                                                                        10.0,
-                                                                    letterSpacing:
-                                                                        0.0,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                    useGoogleFonts:
-                                                                        !FlutterFlowTheme.of(context)
-                                                                            .labelMediumIsCustom,
-                                                                  ),
+                                                          Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: Color(
+                                                                  0x2ED79A0F),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          6.0),
+                                                            ),
+                                                            child: Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(6.0),
+                                                              child: Text(
+                                                                '${formatNumber(
+                                                                  columnRow
+                                                                      .pastDueSubscribers,
+                                                                  formatType:
+                                                                      FormatType
+                                                                          .custom,
+                                                                  format:
+                                                                      '#,###',
+                                                                  locale: 'en',
+                                                                )} Expired',
+                                                                style: FlutterFlowTheme
+                                                                        .of(context)
+                                                                    .labelMedium
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          FlutterFlowTheme.of(context)
+                                                                              .labelMediumFamily,
+                                                                      color: Color(
+                                                                          0xFF542B05),
+                                                                      fontSize:
+                                                                          10.0,
+                                                                      letterSpacing:
+                                                                          0.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                      useGoogleFonts:
+                                                                          !FlutterFlowTheme.of(context)
+                                                                              .labelMediumIsCustom,
+                                                                    ),
+                                                              ),
                                                             ),
                                                           ),
-                                                        ),
-                                                        Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: Color(
-                                                                0x2E565656),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        6.0),
-                                                          ),
-                                                          child: Padding(
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    6.0),
-                                                            child: Text(
-                                                              '${formatNumber(
-                                                                columnPartnershipPlanStatusSummaryRow
-                                                                    .cancelledSubscribers,
-                                                                formatType:
-                                                                    FormatType
-                                                                        .custom,
-                                                                format: '#,###',
-                                                                locale: 'en',
-                                                              )} Cancelled',
-                                                              style: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .labelMedium
-                                                                  .override(
-                                                                    fontFamily:
-                                                                        FlutterFlowTheme.of(context)
-                                                                            .labelMediumFamily,
-                                                                    color: Color(
-                                                                        0xFF222222),
-                                                                    fontSize:
-                                                                        10.0,
-                                                                    letterSpacing:
-                                                                        0.0,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                    useGoogleFonts:
-                                                                        !FlutterFlowTheme.of(context)
-                                                                            .labelMediumIsCustom,
-                                                                  ),
+                                                          Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: Color(
+                                                                  0x2E565656),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          6.0),
+                                                            ),
+                                                            child: Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(6.0),
+                                                              child: Text(
+                                                                '${formatNumber(
+                                                                  columnRow
+                                                                      .cancelledSubscribers,
+                                                                  formatType:
+                                                                      FormatType
+                                                                          .custom,
+                                                                  format:
+                                                                      '#,###',
+                                                                  locale: 'en',
+                                                                )} Cancelled',
+                                                                style: FlutterFlowTheme
+                                                                        .of(context)
+                                                                    .labelMedium
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          FlutterFlowTheme.of(context)
+                                                                              .labelMediumFamily,
+                                                                      color: Color(
+                                                                          0xFF222222),
+                                                                      fontSize:
+                                                                          10.0,
+                                                                      letterSpacing:
+                                                                          0.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                      useGoogleFonts:
+                                                                          !FlutterFlowTheme.of(context)
+                                                                              .labelMediumIsCustom,
+                                                                    ),
+                                                              ),
                                                             ),
                                                           ),
-                                                        ),
-                                                      ].divide(
-                                                          SizedBox(width: 4.0)),
-                                                    ),
-                                                  ]
-                                                      .divide(
-                                                          SizedBox(height: 4.0))
-                                                      .addToStart(SizedBox(
-                                                          height: 12.0))
-                                                      .addToEnd(SizedBox(
-                                                          height: 12.0)),
+                                                        ].divide(
+                                                            SizedBox(width: 4.0)),
+                                                      ),
+                                                    ]
+                                                        .divide(SizedBox(
+                                                            height: 4.0))
+                                                        .addToStart(SizedBox(
+                                                            height: 12.0))
+                                                        .addToEnd(SizedBox(
+                                                            height: 12.0)),
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          ].divide(SizedBox(width: 8.0)),
+                                            ].divide(SizedBox(width: 8.0)),
+                                          ),
                                         ),
                                       ),
                                     ),
+                                  );
+                                }).divide(SizedBox(height: 10.0)),
+                                if (_model.hasMore)
+                                  Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 16.0, 0.0, 16.0),
+                                    child: FFButtonWidget(
+                                      onPressed: () async {
+                                        await _model.fetchNextPage();
+                                        safeSetState(() {});
+                                      },
+                                      text: _model.isLoading
+                                          ? 'Loading...'
+                                          : 'Load More',
+                                      options: FFButtonOptions(
+                                        width: double.infinity,
+                                        height: 40.0,
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            24.0, 0.0, 24.0, 0.0),
+                                        iconPadding:
+                                            EdgeInsetsDirectional.fromSTEB(
+                                                0.0, 0.0, 0.0, 0.0),
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryBackground,
+                                        textStyle: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .override(
+                                              fontFamily:
+                                                  FlutterFlowTheme.of(context)
+                                                      .titleSmallFamily,
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primaryText,
+                                              letterSpacing: 0.0,
+                                              useGoogleFonts:
+                                                  !FlutterFlowTheme.of(context)
+                                                      .titleSmallIsCustom,
+                                            ),
+                                        elevation: 0.0,
+                                        borderSide: BorderSide(
+                                          color: FlutterFlowTheme.of(context)
+                                              .alternate,
+                                          width: 1.0,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                      ),
+                                    ),
                                   ),
-                                );
-                              }).divide(SizedBox(height: 10.0)),
+                              ],
                             );
                           },
                         ),

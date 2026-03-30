@@ -46,7 +46,11 @@ class _ListofprojectsWidgetState extends State<ListofprojectsWidget>
     _model.textController ??= TextEditingController();
     _model.textFieldFocusNode ??= FocusNode();
     _model.textFieldFocusNode!.addListener(() => safeSetState(() {}));
-    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      await _model.fetchNextPage();
+      safeSetState(() {});
+    });
   }
 
   @override
@@ -292,7 +296,10 @@ class _ListofprojectsWidgetState extends State<ListofprojectsWidget>
                               onChanged: (_) => EasyDebounce.debounce(
                                 '_model.textController',
                                 Duration(milliseconds: 500),
-                                () => safeSetState(() {}),
+                                () async {
+                                  await _model.fetchNextPage(isRefresh: true);
+                                  safeSetState(() {});
+                                },
                               ),
                               obscureText: false,
                               decoration: InputDecoration(
@@ -360,52 +367,118 @@ class _ListofprojectsWidgetState extends State<ListofprojectsWidget>
                                   .asValidator(context),
                             ),
                           ),
-                          if (_model.textController.text == null ||
-                              _model.textController.text == '')
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 18.0, 16.0, 0.0),
-                                child: FutureBuilder<List<ProjectsRow>>(
-                                  future: ProjectsTable().queryRows(
-                                    queryFn: (q) => q.order('created_at'),
-                                  ),
-                                  builder: (context, snapshot) {
-                                    // Customize what your widget looks like when it's loading.
-                                    if (!snapshot.hasData) {
-                                      return Center(
-                                        child: SizedBox(
-                                          width: 24.0,
-                                          height: 24.0,
-                                          child: SpinKitFadingCube(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
-                                            size: 24.0,
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                    List<ProjectsRow> fulllistProjectsRowList =
-                                        snapshot.data!;
-                                    if (fulllistProjectsRowList.isEmpty) {
-                                      return EmptyWidget();
-                                    }
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  16.0, 18.0, 16.0, 0.0),
+                              child: Builder(
+                                builder: (context) {
+                                  final projects = _model.projectCache;
 
-                                    return ListView.separated(
+                                  if (projects.isEmpty) {
+                                    return Center(
+                                      child: _model.loading
+                                          ? SizedBox(
+                                              width: 24.0,
+                                              height: 24.0,
+                                              child: SpinKitFadingCube(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primary,
+                                                size: 24.0,
+                                              ),
+                                            )
+                                          : EmptyWidget(),
+                                    );
+                                  }
+
+                                  return RefreshIndicator(
+                                    onRefresh: () async {
+                                      await _model.fetchNextPage(
+                                          isRefresh: true);
+                                      safeSetState(() {});
+                                    },
+                                    child: ListView.separated(
                                       padding: EdgeInsets.fromLTRB(
                                         0,
                                         0,
                                         0,
                                         24.0,
                                       ),
+                                      physics: AlwaysScrollableScrollPhysics(),
                                       scrollDirection: Axis.vertical,
-                                      itemCount: fulllistProjectsRowList.length,
+                                      itemCount: projects.length +
+                                          (_model.hasMore ? 1 : 0),
                                       separatorBuilder: (_, __) =>
                                           SizedBox(height: 8.0),
-                                      itemBuilder: (context, fulllistIndex) {
-                                        final fulllistProjectsRow =
-                                            fulllistProjectsRowList[
-                                                fulllistIndex];
+                                      itemBuilder: (context, index) {
+                                        if (index == projects.length) {
+                                          return Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0.0, 16.0, 0.0, 16.0),
+                                            child: Center(
+                                              child: _model.loading
+                                                  ? SpinKitFadingCube(
+                                                      color: FlutterFlowTheme.of(
+                                                              context)
+                                                          .primary,
+                                                      size: 24.0,
+                                                    )
+                                                  : FFButtonWidget(
+                                                      onPressed: () async {
+                                                        await _model
+                                                            .fetchNextPage();
+                                                        safeSetState(() {});
+                                                      },
+                                                      text: 'Load More',
+                                                      options: FFButtonOptions(
+                                                        width: 150.0,
+                                                        height: 40.0,
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0),
+                                                        iconPadding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0),
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primary,
+                                                        textStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .titleSmall
+                                                                .override(
+                                                                  fontFamily:
+                                                                      FlutterFlowTheme.of(context)
+                                                                          .titleSmallFamily,
+                                                                  color: Colors
+                                                                      .white,
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  useGoogleFonts: !FlutterFlowTheme.of(context)
+                                                                      .titleSmallIsCustom,
+                                                                ),
+                                                        elevation: 2.0,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8.0),
+                                                      ),
+                                                    ),
+                                            ),
+                                          );
+                                        }
+
+                                        final projectRow = projects[index];
                                         return Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
@@ -420,7 +493,7 @@ class _ListofprojectsWidgetState extends State<ListofprojectsWidget>
                                                 DetailsWidget.routeName,
                                                 queryParameters: {
                                                   'id': serializeParam(
-                                                    fulllistProjectsRow.id,
+                                                    projectRow.id,
                                                     ParamType.String,
                                                   ),
                                                 }.withoutNulls,
@@ -460,14 +533,10 @@ class _ListofprojectsWidgetState extends State<ListofprojectsWidget>
                                                             BorderRadius
                                                                 .circular(8.0),
                                                         child: Image.network(
-                                                          fulllistProjectsRow
+                                                          projectRow
                                                               .featuredImage!,
-                                                          width: 95.4,
-                                                          height:
-                                                              MediaQuery.sizeOf(
-                                                                          context)
-                                                                      .height *
-                                                                  1.0,
+                                                          width: 80.0,
+                                                          height: 80.0,
                                                           fit: BoxFit.cover,
                                                           alignment: Alignment(
                                                               0.0, 0.0),
@@ -510,7 +579,7 @@ class _ListofprojectsWidgetState extends State<ListofprojectsWidget>
                                                                     MainAxisAlignment
                                                                         .start,
                                                                 children: [
-                                                                  if (fulllistProjectsRow
+                                                                  if (projectRow
                                                                           .status ==
                                                                       'inactive')
                                                                     Container(
@@ -540,7 +609,7 @@ class _ListofprojectsWidgetState extends State<ListofprojectsWidget>
                                                                         ),
                                                                       ),
                                                                     ),
-                                                                  if (fulllistProjectsRow
+                                                                  if (projectRow
                                                                           .status ==
                                                                       'active')
                                                                     Container(
@@ -571,7 +640,7 @@ class _ListofprojectsWidgetState extends State<ListofprojectsWidget>
                                                                         ),
                                                                       ),
                                                                     ),
-                                                                  if (fulllistProjectsRow
+                                                                  if (projectRow
                                                                           .status ==
                                                                       'draft')
                                                                     Container(
@@ -608,8 +677,7 @@ class _ListofprojectsWidgetState extends State<ListofprojectsWidget>
                                                               ),
                                                             ),
                                                             Text(
-                                                              fulllistProjectsRow
-                                                                  .title,
+                                                              projectRow.title,
                                                               maxLines: 1,
                                                               style: FlutterFlowTheme
                                                                       .of(context)
@@ -641,7 +709,7 @@ class _ListofprojectsWidgetState extends State<ListofprojectsWidget>
                                                               child: Text(
                                                                 valueOrDefault<
                                                                     String>(
-                                                                  fulllistProjectsRow
+                                                                  projectRow
                                                                       .description,
                                                                   'DEC',
                                                                 ),
@@ -681,7 +749,7 @@ class _ListofprojectsWidgetState extends State<ListofprojectsWidget>
                                                                       .spaceBetween,
                                                               children: [
                                                                 Text(
-                                                                  'Target: ${functions.safeCurrency(fulllistProjectsRow.targetAmount!, fulllistProjectsRow.currency!)}',
+                                                                  'Target: ${functions.safeCurrency(projectRow.targetAmount!, projectRow.currency!)}',
                                                                   style: FlutterFlowTheme.of(
                                                                           context)
                                                                       .labelMedium
@@ -715,379 +783,12 @@ class _ListofprojectsWidgetState extends State<ListofprojectsWidget>
                                           ),
                                         );
                                       },
-                                    );
-                                  },
-                                ),
+                                    ),
+                                  );
+                                },
                               ),
                             ),
-                          if (_model.textController.text != null &&
-                              _model.textController.text != '')
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 8.0, 16.0, 0.0),
-                                child: FutureBuilder<List<ProjectsRow>>(
-                                  future: ProjectsTable().queryRows(
-                                    queryFn: (q) => q
-                                        .ilike(
-                                          'title',
-                                          '%${_model.textController.text}%',
-                                        )
-                                        .order('created_at'),
-                                  ),
-                                  builder: (context, snapshot) {
-                                    // Customize what your widget looks like when it's loading.
-                                    if (!snapshot.hasData) {
-                                      return Center(
-                                        child: SizedBox(
-                                          width: 24.0,
-                                          height: 24.0,
-                                          child: SpinKitFadingCube(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
-                                            size: 24.0,
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                    List<ProjectsRow>
-                                        searchlistProjectsRowList =
-                                        snapshot.data!;
-
-                                    if (searchlistProjectsRowList.isEmpty) {
-                                      return EmptyWidget();
-                                    }
-
-                                    return ListView.separated(
-                                      padding: EdgeInsets.fromLTRB(
-                                        0,
-                                        0,
-                                        0,
-                                        24.0,
-                                      ),
-                                      shrinkWrap: true,
-                                      scrollDirection: Axis.vertical,
-                                      itemCount:
-                                          searchlistProjectsRowList.length,
-                                      separatorBuilder: (_, __) =>
-                                          SizedBox(height: 8.0),
-                                      itemBuilder: (context, searchlistIndex) {
-                                        final searchlistProjectsRow =
-                                            searchlistProjectsRowList[
-                                                searchlistIndex];
-                                        return Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 0.0, 0.0, 1.0),
-                                          child: InkWell(
-                                            splashColor: Colors.transparent,
-                                            focusColor: Colors.transparent,
-                                            hoverColor: Colors.transparent,
-                                            highlightColor: Colors.transparent,
-                                            onTap: () async {
-                                              context.pushNamed(
-                                                DetailsWidget.routeName,
-                                                queryParameters: {
-                                                  'id': serializeParam(
-                                                    searchlistProjectsRow.id,
-                                                    ParamType.String,
-                                                  ),
-                                                }.withoutNulls,
-                                              );
-                                            },
-                                            child: Container(
-                                              width: 100.0,
-                                              height: 142.0,
-                                              decoration: BoxDecoration(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primaryBackground,
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    blurRadius: 0.0,
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .alternate,
-                                                    offset: Offset(
-                                                      0.0,
-                                                      1.0,
-                                                    ),
-                                                  )
-                                                ],
-                                                borderRadius:
-                                                    BorderRadius.circular(18.0),
-                                              ),
-                                              child: Padding(
-                                                padding: EdgeInsets.all(8.0),
-                                                child: Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  children: [
-                                                    Expanded(
-                                                      flex: 1,
-                                                      child: ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8.0),
-                                                        child: Image.network(
-                                                          searchlistProjectsRow
-                                                              .featuredImage!,
-                                                          width: 95.4,
-                                                          height:
-                                                              MediaQuery.sizeOf(
-                                                                          context)
-                                                                      .height *
-                                                                  1.0,
-                                                          fit: BoxFit.cover,
-                                                          alignment: Alignment(
-                                                              0.0, 0.0),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Expanded(
-                                                      flex: 2,
-                                                      child: Padding(
-                                                        padding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    8.0,
-                                                                    0.0,
-                                                                    0.0,
-                                                                    0.0),
-                                                        child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.max,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Padding(
-                                                              padding:
-                                                                  EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          0.0,
-                                                                          0.0,
-                                                                          0.0,
-                                                                          4.0),
-                                                              child: Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .max,
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .start,
-                                                                children: [
-                                                                  if (searchlistProjectsRow
-                                                                          .status ==
-                                                                      'inactive')
-                                                                    Container(
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        color: Color(
-                                                                            0xFFE3E3E3),
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(6.0),
-                                                                      ),
-                                                                      child:
-                                                                          Padding(
-                                                                        padding:
-                                                                            EdgeInsets.all(6.0),
-                                                                        child:
-                                                                            Text(
-                                                                          'Inactive',
-                                                                          style: FlutterFlowTheme.of(context)
-                                                                              .labelMedium
-                                                                              .override(
-                                                                                fontFamily: FlutterFlowTheme.of(context).labelMediumFamily,
-                                                                                fontSize: 10.0,
-                                                                                letterSpacing: 0.0,
-                                                                                fontWeight: FontWeight.w600,
-                                                                                useGoogleFonts: !FlutterFlowTheme.of(context).labelMediumIsCustom,
-                                                                              ),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  if (searchlistProjectsRow
-                                                                          .status ==
-                                                                      'active')
-                                                                    Container(
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        color: Color(
-                                                                            0x2E0FD770),
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(6.0),
-                                                                      ),
-                                                                      child:
-                                                                          Padding(
-                                                                        padding:
-                                                                            EdgeInsets.all(6.0),
-                                                                        child:
-                                                                            Text(
-                                                                          'Active',
-                                                                          style: FlutterFlowTheme.of(context)
-                                                                              .labelMedium
-                                                                              .override(
-                                                                                fontFamily: FlutterFlowTheme.of(context).labelMediumFamily,
-                                                                                color: Color(0xFF05542C),
-                                                                                fontSize: 10.0,
-                                                                                letterSpacing: 0.0,
-                                                                                fontWeight: FontWeight.w600,
-                                                                                useGoogleFonts: !FlutterFlowTheme.of(context).labelMediumIsCustom,
-                                                                              ),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  if (searchlistProjectsRow
-                                                                          .status ==
-                                                                      'draft')
-                                                                    Container(
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        color: Color(
-                                                                            0x2ED79A0F),
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(6.0),
-                                                                      ),
-                                                                      child:
-                                                                          Padding(
-                                                                        padding:
-                                                                            EdgeInsets.all(6.0),
-                                                                        child:
-                                                                            Text(
-                                                                          'Draft',
-                                                                          style: FlutterFlowTheme.of(context)
-                                                                              .labelMedium
-                                                                              .override(
-                                                                                fontFamily: FlutterFlowTheme.of(context).labelMediumFamily,
-                                                                                color: Color(0xFF542B05),
-                                                                                fontSize: 10.0,
-                                                                                letterSpacing: 0.0,
-                                                                                fontWeight: FontWeight.w600,
-                                                                                useGoogleFonts: !FlutterFlowTheme.of(context).labelMediumIsCustom,
-                                                                              ),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                ].divide(SizedBox(
-                                                                    width:
-                                                                        2.0)),
-                                                              ),
-                                                            ),
-                                                            Text(
-                                                              searchlistProjectsRow
-                                                                  .title,
-                                                              maxLines: 1,
-                                                              style: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .bodyLarge
-                                                                  .override(
-                                                                    fontFamily:
-                                                                        FlutterFlowTheme.of(context)
-                                                                            .bodyLargeFamily,
-                                                                    fontSize:
-                                                                        14.0,
-                                                                    letterSpacing:
-                                                                        0.0,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                    useGoogleFonts:
-                                                                        !FlutterFlowTheme.of(context)
-                                                                            .bodyLargeIsCustom,
-                                                                  ),
-                                                            ),
-                                                            Text(
-                                                              valueOrDefault<
-                                                                  String>(
-                                                                searchlistProjectsRow
-                                                                    .description,
-                                                                'DEC',
-                                                              ),
-                                                              maxLines: 2,
-                                                              style: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .bodyLarge
-                                                                  .override(
-                                                                    fontFamily:
-                                                                        FlutterFlowTheme.of(context)
-                                                                            .bodyLargeFamily,
-                                                                    fontSize:
-                                                                        12.0,
-                                                                    letterSpacing:
-                                                                        0.0,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500,
-                                                                    useGoogleFonts:
-                                                                        !FlutterFlowTheme.of(context)
-                                                                            .bodyLargeIsCustom,
-                                                                  ),
-                                                            ),
-                                                            Divider(
-                                                              height: 4.0,
-                                                              thickness: 2.0,
-                                                              color: Color(
-                                                                  0x4BE0E3E7),
-                                                            ),
-                                                            Padding(
-                                                              padding:
-                                                                  EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          0.0,
-                                                                          4.0,
-                                                                          0.0,
-                                                                          0.0),
-                                                              child: Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .max,
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                children: [
-                                                                  Text(
-                                                                    'Target: ${functions.safeCurrency(searchlistProjectsRow.targetAmount!, searchlistProjectsRow.currency!)}',
-                                                                    style: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .labelMedium
-                                                                        .override(
-                                                                          fontFamily:
-                                                                              FlutterFlowTheme.of(context).labelMediumFamily,
-                                                                          fontSize:
-                                                                              12.0,
-                                                                          letterSpacing:
-                                                                              0.0,
-                                                                          fontWeight:
-                                                                              FontWeight.w300,
-                                                                          useGoogleFonts:
-                                                                              !FlutterFlowTheme.of(context).labelMediumIsCustom,
-                                                                        ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          ].divide(SizedBox(
-                                                              height: 4.0)),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ].divide(
-                                                      SizedBox(width: 4.0)),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
+                          ),
                         ].addToStart(SizedBox(height: 32.0)),
                       );
                     },

@@ -21,6 +21,12 @@ class TransactionHistoryModel
 
   String tab = 'all';
 
+  List<TransactionsProjectViewRow> transactionCache = [];
+  int transactionOffset = 0;
+  final int transactionLimit = 10;
+  bool isLoadingTransactions = false;
+  bool hasMoreTransactions = true;
+
   ///  State fields for stateful widgets in this page.
 
   // State field(s) for searchfiled widget.
@@ -41,5 +47,43 @@ class TransactionHistoryModel
   void dispose() {
     searchfiledFocusNode?.dispose();
     searchfiledTextController?.dispose();
+  }
+
+  Future fetchNextTransactions({bool isRefresh = false}) async {
+    if (isRefresh) {
+      transactionOffset = 0;
+      transactionCache = [];
+      hasMoreTransactions = true;
+    }
+
+    if (!hasMoreTransactions || isLoadingTransactions) return;
+
+    isLoadingTransactions = true;
+
+    final queryStr = searchfiledTextController?.text ?? '';
+    final typeFilter = (tab != 'all') ? tab : null;
+
+    final newRows = await TransactionsProjectViewTable().queryRows(
+      queryFn: (q) {
+        var filtered = q;
+        if (queryStr.isNotEmpty) {
+          filtered = filtered.or(
+              'member_full_name.ilike.%$queryStr%,member_email.ilike.%$queryStr%');
+        }
+        if (typeFilter != null) {
+          filtered = filtered.eq('transaction_type', typeFilter);
+        }
+        return filtered.order('paid_at', ascending: false).range(
+            transactionOffset, transactionOffset + transactionLimit - 1);
+      },
+    );
+
+    if (newRows.length < transactionLimit) {
+      hasMoreTransactions = false;
+    }
+
+    transactionCache.addAll(newRows);
+    transactionOffset += newRows.length;
+    isLoadingTransactions = false;
   }
 }

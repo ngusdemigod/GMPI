@@ -21,9 +21,49 @@ import 'package:provider/provider.dart';
 import 'package:webviewx_plus/webviewx_plus.dart';
 
 class PartnerplansModel extends FlutterFlowModel<PartnerplansWidget> {
+  ///  State fields for stateful widgets in this page.
+
+  // Cache for partnership plans
+  List<PartnershipPlanStatusSummaryRow>? plansCache;
+  bool isLoading = false;
+  int offset = 0;
+  bool hasMore = true;
+  final int limit = 10;
+
   @override
   void initState(BuildContext context) {}
 
   @override
   void dispose() {}
+
+  // Action: fetch next page
+  Future fetchNextPage() async {
+    if (isLoading || !hasMore) return;
+    isLoading = true;
+
+    try {
+      final newRows = await PartnershipPlanStatusSummaryTable().queryRows(
+        queryFn: (q) => q.offset(offset),
+        limit: limit,
+      );
+
+      if (newRows.length < limit) {
+        hasMore = false;
+      }
+
+      plansCache = [...(plansCache ?? []), ...newRows];
+      offset += newRows.length;
+    } catch (e) {
+      print('Error fetching partner plans: $e');
+    } finally {
+      isLoading = false;
+    }
+  }
+
+  Future refresh() async {
+    plansCache = null;
+    offset = 0;
+    hasMore = true;
+    await fetchNextPage();
+  }
 }

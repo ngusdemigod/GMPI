@@ -45,12 +45,8 @@ class _AdminhomeWidgetState extends State<AdminhomeWidget> {
       _model.churchesquery = await ChurchesTable().queryRows(
         queryFn: (q) => q,
       );
-      _model.projectsummaryview = await ProjectSummaryViewTable().queryRows(
-        queryFn: (q) => q,
-      );
-      _model.transactions = await MembersTransactionsTable().queryRows(
-        queryFn: (q) => q,
-      );
+      await _model.fetchNextProjects();
+      await _model.fetchNextTransactions();
       FFAppState().currency = _model.churchesquery!.firstOrNull!.currency!;
       safeSetState(() {});
     });
@@ -964,8 +960,7 @@ class _AdminhomeWidgetState extends State<AdminhomeWidget> {
                     children: [
                       Builder(
                         builder: (context) {
-                          final projects =
-                              _model.projectsummaryview?.toList() ?? [];
+                          final projects = _model.projectCache;
 
                           if (projects.isEmpty) {
                             return Container(
@@ -1053,8 +1048,8 @@ class _AdminhomeWidgetState extends State<AdminhomeWidget> {
                                                   child: Image.network(
                                                     imageProjectsRow!
                                                         .featuredImage!,
-                                                    width: double.infinity,
-                                                    height: 151.2,
+                                                    width: 243.57,
+                                                    height: 243.57,
                                                     fit: BoxFit.cover,
                                                   ),
                                                 ),
@@ -1340,8 +1335,46 @@ class _AdminhomeWidgetState extends State<AdminhomeWidget> {
                                   ),
                                 ),
                               );
-                            }).divide(SizedBox(width: 16.0)),
-                          );
+                              }).divide(SizedBox(width: 16.0)),
+                            ),
+                            if (_model.projectHasMore)
+                              Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: FFButtonWidget(
+                                  onPressed: () async {
+                                    await _model.fetchNextProjects();
+                                    safeSetState(() {});
+                                  },
+                                  text: _model.projectLoading
+                                      ? 'Loading...'
+                                      : 'Load More',
+                                  options: FFButtonOptions(
+                                    width: 100.0,
+                                    height: 40.0,
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        16.0, 0.0, 16.0, 0.0),
+                                    iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 0.0, 0.0),
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    textStyle: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .override(
+                                          fontFamily:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmallFamily,
+                                          color: Colors.white,
+                                          fontSize: 12.0,
+                                          letterSpacing: 0.0,
+                                          useGoogleFonts: !FlutterFlowTheme.of(
+                                                  context)
+                                              .titleSmallIsCustom,
+                                        ),
+                                    elevation: 0.0,
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                ),
+                              ),
+                          ];
                         },
                       ),
                     ]
@@ -1415,66 +1448,86 @@ class _AdminhomeWidgetState extends State<AdminhomeWidget> {
                             ),
                           ],
                         ),
-                        FutureBuilder<List<MembersTransactionsRow>>(
-                          future: MembersTransactionsTable().queryRows(
-                            queryFn: (q) => q.order('paid_at'),
-                            limit: 20,
-                          ),
-                          builder: (context, snapshot) {
-                            // Customize what your widget looks like when it's loading.
-                            if (!snapshot.hasData) {
-                              return Center(
-                                child: SizedBox(
-                                  width: 24.0,
-                                  height: 24.0,
-                                  child: SpinKitFadingCube(
-                                    color: FlutterFlowTheme.of(context).primary,
-                                    size: 24.0,
-                                  ),
-                                ),
-                              );
-                            }
-                            List<MembersTransactionsRow>
-                                columnMembersTransactionsRowList =
-                                snapshot.data!;
+                        Builder(
+                          builder: (context) {
+                            final transactions = _model.transactionCache;
 
-                            if (columnMembersTransactionsRowList.isEmpty) {
+                            if (transactions.isEmpty) {
                               return EmptyWidget();
                             }
 
                             return Column(
                               mainAxisSize: MainAxisSize.min,
-                              children: List.generate(
-                                      columnMembersTransactionsRowList.length,
-                                      (columnIndex) {
-                                final columnMembersTransactionsRow =
-                                    columnMembersTransactionsRowList[
-                                        columnIndex];
-                                return TransactionListWidget(
-                                  key: Key(
-                                      'Keylpo_${columnIndex}_of_${columnMembersTransactionsRowList.length}'),
-                                  title: valueOrDefault<String>(
-                                    columnMembersTransactionsRow
-                                        .transactionTitle,
-                                    'title',
+                              children: [
+                                ...List.generate(transactions.length,
+                                    (columnIndex) {
+                                  final columnMembersTransactionsRow =
+                                      transactions[columnIndex];
+                                  return TransactionListWidget(
+                                    key: Key(
+                                        'Keylpo_${columnIndex}_of_${transactions.length}'),
+                                    title: valueOrDefault<String>(
+                                      columnMembersTransactionsRow
+                                          .transactionTitle,
+                                      'title',
+                                    ),
+                                    user: valueOrDefault<String>(
+                                      columnMembersTransactionsRow
+                                          .memberFullName,
+                                      'name',
+                                    ),
+                                    status: valueOrDefault<String>(
+                                      columnMembersTransactionsRow.status,
+                                      'failed',
+                                    ),
+                                    amount: valueOrDefault<double>(
+                                      columnMembersTransactionsRow.amount,
+                                      0.0,
+                                    ),
+                                  );
+                                }).divide(SizedBox(height: 8.0)),
+                                if (_model.transactionHasMore)
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 16.0),
+                                    child: FFButtonWidget(
+                                      onPressed: () async {
+                                        await _model.fetchNextTransactions();
+                                        safeSetState(() {});
+                                      },
+                                      text: _model.transactionLoading
+                                          ? 'Loading...'
+                                          : 'Load More',
+                                      options: FFButtonOptions(
+                                        width: double.infinity,
+                                        height: 40.0,
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            16.0, 0.0, 16.0, 0.0),
+                                        iconPadding:
+                                            EdgeInsetsDirectional.fromSTEB(
+                                                0.0, 0.0, 0.0, 0.0),
+                                        color: FlutterFlowTheme.of(context)
+                                            .primary,
+                                        textStyle: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .override(
+                                              fontFamily:
+                                                  FlutterFlowTheme.of(context)
+                                                      .titleSmallFamily,
+                                              color: Colors.white,
+                                              fontSize: 12.0,
+                                              letterSpacing: 0.0,
+                                              useGoogleFonts: !FlutterFlowTheme
+                                                      .of(context)
+                                                  .titleSmallIsCustom,
+                                            ),
+                                        elevation: 0.0,
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                      ),
+                                    ),
                                   ),
-                                  user: valueOrDefault<String>(
-                                    columnMembersTransactionsRow.memberFullName,
-                                    'name',
-                                  ),
-                                  status: valueOrDefault<String>(
-                                    columnMembersTransactionsRow.status,
-                                    'failed',
-                                  ),
-                                  amount: valueOrDefault<double>(
-                                    columnMembersTransactionsRow.amount,
-                                    0.0,
-                                  ),
-                                );
-                              })
-                                  .divide(SizedBox(height: 8.0))
-                                  .addToStart(SizedBox(height: 16.0))
-                                  .addToEnd(SizedBox(height: 16.0)),
+                              ].addToStart(SizedBox(height: 16.0)),
                             );
                           },
                         ),

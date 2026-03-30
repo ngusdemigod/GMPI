@@ -27,6 +27,13 @@ class RewardsModel extends FlutterFlowModel<RewardsWidget> {
   TextEditingController? textController;
   String? Function(BuildContext, String?)? textControllerValidator;
 
+  // Pagination state
+  List<RewardsWithStatsRow> rewardCache = [];
+  int offset = 0;
+  bool loading = false;
+  bool hasMore = true;
+  final int limit = 10;
+
   @override
   void initState(BuildContext context) {}
 
@@ -34,5 +41,35 @@ class RewardsModel extends FlutterFlowModel<RewardsWidget> {
   void dispose() {
     textFieldFocusNode?.dispose();
     textController?.dispose();
+  }
+
+  Future fetchNextPage({bool isRefresh = false}) async {
+    if (loading || (!hasMore && !isRefresh)) return;
+    loading = true;
+    if (isRefresh) {
+      offset = 0;
+      rewardCache.clear();
+      hasMore = true;
+    }
+
+    final String? currentSearch = textController?.text;
+    final newRows = await RewardsWithStatsTable().queryRows(
+      queryFn: (q) {
+        var query = q.order('created_at', ascending: false);
+        if (currentSearch != null && currentSearch.isNotEmpty) {
+          query = query.ilike('title', '%$currentSearch%');
+        }
+        return query;
+      },
+      limit: limit,
+      offset: offset,
+    );
+
+    if (newRows.length < limit) {
+      hasMore = false;
+    }
+    rewardCache.addAll(newRows);
+    offset += newRows.length;
+    loading = false;
   }
 }
