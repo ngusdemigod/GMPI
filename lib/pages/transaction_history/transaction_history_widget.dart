@@ -1,5 +1,6 @@
 import '/backend/supabase/supabase.dart';
 import '/components/empty_widget.dart';
+import '/components/transaction_list_widget.dart';
 import '/flutter_flow/flutter_flow_choice_chips.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -221,8 +222,28 @@ class _TransactionHistoryWidgetState extends State<TransactionHistoryWidget> {
                                         }.withoutNulls,
                                       );
                                     },
-                                    child: TransactionsProjectHistoryRecordWidget(
-                                      transaction: transaction,
+                                    child: TransactionListWidget(
+                                      title: valueOrDefault<String>(
+                                        transaction.projectTitle ??
+                                            transaction.transactionType,
+                                        'Transaction',
+                                      ),
+                                      user: valueOrDefault<String>(
+                                        transaction.memberFullName,
+                                        'User',
+                                      ),
+                                      partnership: valueOrDefault<String>(
+                                        transaction.partnershipPlan,
+                                        'Not a partner',
+                                      ),
+                                      status: valueOrDefault<String>(
+                                        transaction.transactionStatus,
+                                        'failed',
+                                      ),
+                                      amount: valueOrDefault<double>(
+                                        transaction.amount,
+                                        0.0,
+                                      ),
                                     ),
                                   ),
                                 );
