@@ -9,10 +9,12 @@ abstract class SupabaseTable<T extends SupabaseDataRow> {
   Future<List<T>> queryRows({
     required PostgrestTransformBuilder Function(PostgrestFilterBuilder) queryFn,
     int? limit,
+    int? offset,
   }) {
     final select = _select();
     var query = queryFn(select);
-    query = limit != null ? query.limit(limit) : query;
+    if (offset != null) query = query.range(offset, offset + (limit ?? 1000) - 1);
+    query = limit != null && offset == null ? query.limit(limit) : query;
     return query.select().then((rows) => rows.map(createRow).toList());
   }
 

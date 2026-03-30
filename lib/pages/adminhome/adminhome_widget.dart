@@ -971,8 +971,8 @@ class _AdminhomeWidgetState extends State<AdminhomeWidget> {
 
                           return Row(
                             mainAxisSize: MainAxisSize.max,
-                            children:
-                                List.generate(projects.length, (projectsIndex) {
+                            children: [
+                              ...List.generate(projects.length, (projectsIndex) {
                               final projectsItem = projects[projectsIndex];
                               return Container(
                                 width: 243.57,
@@ -1336,8 +1336,7 @@ class _AdminhomeWidgetState extends State<AdminhomeWidget> {
                                 ),
                               );
                               }).divide(SizedBox(width: 16.0)),
-                            ),
-                            if (_model.projectHasMore)
+                              if (_model.projectHasMore)
                               Padding(
                                 padding: EdgeInsets.all(10.0),
                                 child: FFButtonWidget(
@@ -1374,7 +1373,8 @@ class _AdminhomeWidgetState extends State<AdminhomeWidget> {
                                   ),
                                 ),
                               ),
-                          ];
+                            ],
+                          );
                         },
                       ),
                     ]

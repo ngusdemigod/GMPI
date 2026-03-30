@@ -157,7 +157,10 @@ class _PartnerplansWidgetState extends State<PartnerplansWidget>
                                           height: MediaQuery.sizeOf(context)
                                                   .height *
                                               1.0,
-                                          child: CreatePlanWidget(),
+                                          child: CreatePlanWidget(
+                                            id: null,
+                                            status: true,
+                                          ),
                                         ),
                                       ),
                                     ),

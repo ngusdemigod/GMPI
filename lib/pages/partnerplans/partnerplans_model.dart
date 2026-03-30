@@ -43,8 +43,9 @@ class PartnerplansModel extends FlutterFlowModel<PartnerplansWidget> {
 
     try {
       final newRows = await PartnershipPlanStatusSummaryTable().queryRows(
-        queryFn: (q) => q.offset(offset),
+        queryFn: (q) => q,
         limit: limit,
+        offset: offset,
       );
 
       if (newRows.length < limit) {

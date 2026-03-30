@@ -55,11 +55,11 @@ class RewardsModel extends FlutterFlowModel<RewardsWidget> {
     final String? currentSearch = textController?.text;
     final newRows = await RewardsWithStatsTable().queryRows(
       queryFn: (q) {
-        var query = q.order('created_at', ascending: false);
+        var query = q;
         if (currentSearch != null && currentSearch.isNotEmpty) {
           query = query.ilike('title', '%$currentSearch%');
         }
-        return query;
+        return query.order('created_at', ascending: false);
       },
       limit: limit,
       offset: offset,
