@@ -37,7 +37,13 @@ class PartnerplansModel extends FlutterFlowModel<PartnerplansWidget> {
   void dispose() {}
 
   // Action: fetch next page
-  Future fetchNextPage() async {
+  Future fetchNextPage({bool isRefresh = false}) async {
+    if (isRefresh) {
+      offset = 0;
+      hasMore = true;
+      plansCache = null;
+    }
+
     if (isLoading || !hasMore) return;
     isLoading = true;
 

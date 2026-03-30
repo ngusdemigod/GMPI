@@ -419,6 +419,12 @@ class _UpdaterewardsWidgetState extends State<UpdaterewardsWidget>
                                             height: 200.0,
                                             fit: BoxFit.cover,
                                           ),
+                                          errorBuilder:
+                                              (context, error, stackTrace) =>
+                                                  Image.asset(
+                                            'assets/images/error_image.jpg',
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       ),
                                       Padding(

@@ -117,6 +117,11 @@ class _Dropdown10UserListWidgetState extends State<Dropdown10UserListWidget> {
                                   width: 32.0,
                                   height: 32.0,
                                   fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Image.asset(
+                                    'assets/images/error_image.jpg',
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                             ),
@@ -205,6 +210,11 @@ class _Dropdown10UserListWidgetState extends State<Dropdown10UserListWidget> {
                                   width: 32.0,
                                   height: 32.0,
                                   fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Image.asset(
+                                    'assets/images/error_image.jpg',
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                             ),
@@ -293,6 +303,11 @@ class _Dropdown10UserListWidgetState extends State<Dropdown10UserListWidget> {
                                   width: 32.0,
                                   height: 32.0,
                                   fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Image.asset(
+                                    'assets/images/error_image.jpg',
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                             ),
@@ -381,6 +396,11 @@ class _Dropdown10UserListWidgetState extends State<Dropdown10UserListWidget> {
                                   width: 32.0,
                                   height: 32.0,
                                   fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Image.asset(
+                                    'assets/images/error_image.jpg',
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                             ),

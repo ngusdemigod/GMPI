@@ -166,7 +166,10 @@ class _PartnerplansWidgetState extends State<PartnerplansWidget>
                                     ),
                                   );
                                 },
-                              ).then((value) => safeSetState(() {}));
+                              ).then((value) async {
+                                await _model.fetchNextPage(isRefresh: true);
+                                safeSetState(() {});
+                              });
                             },
                             text: 'Add plan',
                             icon: Icon(
@@ -292,10 +295,9 @@ class _PartnerplansWidgetState extends State<PartnerplansWidget>
                                               Expanded(
                                                 flex: 2,
                                                 child: Padding(
-                                                  padding:
-                                                      EdgeInsetsDirectional
-                                                          .fromSTEB(8.0, 0.0,
-                                                              0.0, 0.0),
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          8.0, 0.0, 0.0, 0.0),
                                                   child: Column(
                                                     mainAxisSize:
                                                         MainAxisSize.max,
@@ -308,22 +310,20 @@ class _PartnerplansWidgetState extends State<PartnerplansWidget>
                                                     children: [
                                                       Text(
                                                         '${valueOrDefault<String>(
-                                                          functions
-                                                              .safeCurrency(
-                                                                  columnRow
-                                                                      .amountLOW!
-                                                                      .toDouble(),
-                                                                  FFAppState()
-                                                                      .currency),
+                                                          functions.safeCurrency(
+                                                              columnRow
+                                                                  .amountLOW!
+                                                                  .toDouble(),
+                                                              FFAppState()
+                                                                  .currency),
                                                           '0.00',
                                                         )} - ${valueOrDefault<String>(
-                                                          functions
-                                                              .safeCurrency(
-                                                                  columnRow
-                                                                      .amountHIGH!
-                                                                      .toDouble(),
-                                                                  FFAppState()
-                                                                      .currency),
+                                                          functions.safeCurrency(
+                                                              columnRow
+                                                                  .amountHIGH!
+                                                                  .toDouble(),
+                                                              FFAppState()
+                                                                  .currency),
                                                           '0.00',
                                                         )}',
                                                         style: FlutterFlowTheme
@@ -360,10 +360,9 @@ class _PartnerplansWidgetState extends State<PartnerplansWidget>
                                                                     context)
                                                                 .titleMedium
                                                                 .override(
-                                                                  fontFamily:
-                                                                      FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .titleMediumFamily,
+                                                                  fontFamily: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .titleMediumFamily,
                                                                   color: FlutterFlowTheme.of(
                                                                           context)
                                                                       .primaryText,
@@ -395,8 +394,8 @@ class _PartnerplansWidgetState extends State<PartnerplansWidget>
                                                               TextSpan(
                                                                 text: columnRow
                                                                     .description!,
-                                                                style: FlutterFlowTheme
-                                                                        .of(context)
+                                                                style: FlutterFlowTheme.of(
+                                                                        context)
                                                                     .bodyMedium
                                                                     .override(
                                                                       fontFamily:
@@ -416,10 +415,9 @@ class _PartnerplansWidgetState extends State<PartnerplansWidget>
                                                                     .of(context)
                                                                 .bodyMedium
                                                                 .override(
-                                                                  fontFamily:
-                                                                      FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .bodyMediumFamily,
+                                                                  fontFamily: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMediumFamily,
                                                                   letterSpacing:
                                                                       0.0,
                                                                   lineHeight:
@@ -465,8 +463,8 @@ class _PartnerplansWidgetState extends State<PartnerplansWidget>
                                                                       '#,###',
                                                                   locale: 'en',
                                                                 )} Active',
-                                                                style: FlutterFlowTheme
-                                                                        .of(context)
+                                                                style: FlutterFlowTheme.of(
+                                                                        context)
                                                                     .labelMedium
                                                                     .override(
                                                                       fontFamily:
@@ -513,8 +511,8 @@ class _PartnerplansWidgetState extends State<PartnerplansWidget>
                                                                       '#,###',
                                                                   locale: 'en',
                                                                 )} Expired',
-                                                                style: FlutterFlowTheme
-                                                                        .of(context)
+                                                                style: FlutterFlowTheme.of(
+                                                                        context)
                                                                     .labelMedium
                                                                     .override(
                                                                       fontFamily:
@@ -561,8 +559,8 @@ class _PartnerplansWidgetState extends State<PartnerplansWidget>
                                                                       '#,###',
                                                                   locale: 'en',
                                                                 )} Cancelled',
-                                                                style: FlutterFlowTheme
-                                                                        .of(context)
+                                                                style: FlutterFlowTheme.of(
+                                                                        context)
                                                                     .labelMedium
                                                                     .override(
                                                                       fontFamily:
@@ -584,8 +582,8 @@ class _PartnerplansWidgetState extends State<PartnerplansWidget>
                                                               ),
                                                             ),
                                                           ),
-                                                        ].divide(
-                                                            SizedBox(width: 4.0)),
+                                                        ].divide(SizedBox(
+                                                            width: 4.0)),
                                                       ),
                                                     ]
                                                         .divide(SizedBox(

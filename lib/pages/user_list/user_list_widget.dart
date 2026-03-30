@@ -277,21 +277,21 @@ class _UserListWidgetState extends State<UserListWidget>
                                                     0.0, 0.0, 0.0, 0.0),
                                             color: FlutterFlowTheme.of(context)
                                                 .primary,
-                                            textStyle: FlutterFlowTheme.of(
-                                                    context)
-                                                .titleSmall
-                                                .override(
-                                                  fontFamily:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleSmallFamily,
-                                                  color: Colors.white,
-                                                  letterSpacing: 0.0,
-                                                  useGoogleFonts:
-                                                      !FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleSmallIsCustom,
-                                                ),
+                                            textStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .titleSmall
+                                                    .override(
+                                                      fontFamily:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .titleSmallFamily,
+                                                      color: Colors.white,
+                                                      letterSpacing: 0.0,
+                                                      useGoogleFonts:
+                                                          !FlutterFlowTheme.of(
+                                                                  context)
+                                                              .titleSmallIsCustom,
+                                                    ),
                                             elevation: 3.0,
                                             borderSide: BorderSide(
                                               color: Colors.transparent,
@@ -343,7 +343,10 @@ class _UserListWidgetState extends State<UserListWidget>
                                         ),
                                       );
                                     },
-                                  ).then((value) => safeSetState(() {}));
+                                  ).then((value) async {
+                                    await _model.fetchNextPage(isRefresh: true);
+                                    safeSetState(() {});
+                                  });
                                 },
                                 child: Container(
                                   width: MediaQuery.sizeOf(context).width * 1.0,

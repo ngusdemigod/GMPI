@@ -110,6 +110,10 @@ class _VideoLISTWidgetState extends State<VideoLISTWidget>
                 width: 120.0,
                 height: 100.0,
                 fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Image.asset(
+                  'assets/images/error_image.jpg',
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             Align(
@@ -178,6 +182,11 @@ class _VideoLISTWidgetState extends State<VideoLISTWidget>
                           width: 32.0,
                           height: 32.0,
                           fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) =>
+                              Image.asset(
+                            'assets/images/error_image.jpg',
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                       Padding(

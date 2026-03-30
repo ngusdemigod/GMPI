@@ -972,407 +972,425 @@ class _AdminhomeWidgetState extends State<AdminhomeWidget> {
                           return Row(
                             mainAxisSize: MainAxisSize.max,
                             children: [
-                              ...List.generate(projects.length, (projectsIndex) {
-                              final projectsItem = projects[projectsIndex];
-                              return Container(
-                                width: 243.57,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(0.0),
-                                ),
-                                child: InkWell(
-                                  splashColor: Colors.transparent,
-                                  focusColor: Colors.transparent,
-                                  hoverColor: Colors.transparent,
-                                  highlightColor: Colors.transparent,
-                                  onTap: () async {
-                                    context.pushNamed(
-                                      DetailsWidget.routeName,
-                                      queryParameters: {
-                                        'id': serializeParam(
-                                          projectsItem.projectId,
-                                          ParamType.String,
-                                        ),
-                                      }.withoutNulls,
-                                    );
-                                  },
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Stack(
-                                        children: [
-                                          FutureBuilder<List<ProjectsRow>>(
-                                            future:
-                                                ProjectsTable().querySingleRow(
-                                              queryFn: (q) => q.eqOrNull(
-                                                'id',
-                                                projectsItem.projectId,
-                                              ),
-                                            ),
-                                            builder: (context, snapshot) {
-                                              // Customize what your widget looks like when it's loading.
-                                              if (!snapshot.hasData) {
-                                                return Center(
-                                                  child: SizedBox(
-                                                    width: 24.0,
-                                                    height: 24.0,
-                                                    child: SpinKitFadingCube(
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primary,
-                                                      size: 24.0,
-                                                    ),
-                                                  ),
-                                                );
-                                              }
-                                              List<ProjectsRow>
-                                                  imageProjectsRowList =
-                                                  snapshot.data!;
-
-                                              final imageProjectsRow =
-                                                  imageProjectsRowList
-                                                          .isNotEmpty
-                                                      ? imageProjectsRowList
-                                                          .first
-                                                      : null;
-
-                                              return Hero(
-                                                tag: imageProjectsRow!
-                                                    .featuredImage!,
-                                                transitionOnUserGestures: true,
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          12.0),
-                                                  child: Image.network(
-                                                    imageProjectsRow!
-                                                        .featuredImage!,
-                                                    width: 243.57,
-                                                    height: 243.57,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                              );
-                                            },
+                              ...List.generate(projects.length,
+                                  (projectsIndex) {
+                                final projectsItem = projects[projectsIndex];
+                                return Container(
+                                  width: 243.57,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(0.0),
+                                  ),
+                                  child: InkWell(
+                                    splashColor: Colors.transparent,
+                                    focusColor: Colors.transparent,
+                                    hoverColor: Colors.transparent,
+                                    highlightColor: Colors.transparent,
+                                    onTap: () async {
+                                      context.pushNamed(
+                                        DetailsWidget.routeName,
+                                        queryParameters: {
+                                          'id': serializeParam(
+                                            projectsItem.projectId,
+                                            ParamType.String,
                                           ),
-                                          Align(
-                                            alignment: AlignmentDirectional(
-                                                -2.32, -0.38),
-                                            child: Padding(
-                                              padding: EdgeInsets.all(10.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  if (projectsItem
-                                                          .projectStatus ==
-                                                      'active')
-                                                    Container(
-                                                      width: 58.9,
-                                                      decoration: BoxDecoration(
+                                        }.withoutNulls,
+                                      );
+                                    },
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Stack(
+                                          children: [
+                                            FutureBuilder<List<ProjectsRow>>(
+                                              future: ProjectsTable()
+                                                  .querySingleRow(
+                                                queryFn: (q) => q.eqOrNull(
+                                                  'id',
+                                                  projectsItem.projectId,
+                                                ),
+                                              ),
+                                              builder: (context, snapshot) {
+                                                // Customize what your widget looks like when it's loading.
+                                                if (!snapshot.hasData) {
+                                                  return Center(
+                                                    child: SizedBox(
+                                                      width: 24.0,
+                                                      height: 24.0,
+                                                      child: SpinKitFadingCube(
                                                         color:
                                                             FlutterFlowTheme.of(
                                                                     context)
                                                                 .primary,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8.0),
-                                                      ),
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                      child: Padding(
-                                                        padding:
-                                                            EdgeInsets.all(8.0),
-                                                        child: Text(
-                                                          'Active',
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                fontFamily: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMediumFamily,
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .primaryBackground,
-                                                                fontSize: 12.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                shadows: [
-                                                                  Shadow(
-                                                                    color: Color(
-                                                                        0x391C1C1C),
-                                                                    offset:
-                                                                        Offset(
-                                                                            0.0,
-                                                                            0.0),
-                                                                    blurRadius:
-                                                                        2.0,
-                                                                  )
-                                                                ],
-                                                                useGoogleFonts:
-                                                                    !FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .bodyMediumIsCustom,
-                                                              ),
-                                                        ),
+                                                        size: 24.0,
                                                       ),
                                                     ),
-                                                  if (projectsItem
-                                                          .projectStatus ==
-                                                      'inactive')
-                                                    Container(
-                                                      decoration: BoxDecoration(
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .alternate,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8.0),
-                                                      ),
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                      child: Padding(
-                                                        padding:
-                                                            EdgeInsets.all(8.0),
-                                                        child: Text(
-                                                          'Inactive',
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                fontFamily: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMediumFamily,
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .primaryText,
-                                                                fontSize: 12.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                shadows: [
-                                                                  Shadow(
-                                                                    color: Color(
-                                                                        0x391C1C1C),
-                                                                    offset:
-                                                                        Offset(
-                                                                            0.0,
-                                                                            0.0),
-                                                                    blurRadius:
-                                                                        2.0,
-                                                                  )
-                                                                ],
-                                                                useGoogleFonts:
-                                                                    !FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .bodyMediumIsCustom,
-                                                              ),
-                                                        ),
+                                                  );
+                                                }
+                                                List<ProjectsRow>
+                                                    imageProjectsRowList =
+                                                    snapshot.data!;
+
+                                                final imageProjectsRow =
+                                                    imageProjectsRowList
+                                                            .isNotEmpty
+                                                        ? imageProjectsRowList
+                                                            .first
+                                                        : null;
+
+                                                return Hero(
+                                                  tag: imageProjectsRow!
+                                                      .featuredImage!,
+                                                  transitionOnUserGestures:
+                                                      true,
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12.0),
+                                                    child: Image.network(
+                                                      imageProjectsRow!
+                                                          .featuredImage!,
+                                                      width: 243.57,
+                                                      height: 243.57,
+                                                      fit: BoxFit.cover,
+                                                      errorBuilder: (context,
+                                                              error,
+                                                              stackTrace) =>
+                                                          Image.asset(
+                                                        'assets/images/error_image.jpg',
+                                                        fit: BoxFit.cover,
                                                       ),
                                                     ),
-                                                ],
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                            Align(
+                                              alignment: AlignmentDirectional(
+                                                  -2.32, -0.38),
+                                              child: Padding(
+                                                padding: EdgeInsets.all(10.0),
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    if (projectsItem
+                                                            .projectStatus ==
+                                                        'active')
+                                                      Container(
+                                                        width: 58.9,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primary,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      8.0),
+                                                        ),
+                                                        alignment:
+                                                            AlignmentDirectional(
+                                                                0.0, 0.0),
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  8.0),
+                                                          child: Text(
+                                                            'Active',
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .bodyMedium
+                                                                .override(
+                                                                  fontFamily: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMediumFamily,
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .primaryBackground,
+                                                                  fontSize:
+                                                                      12.0,
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  shadows: [
+                                                                    Shadow(
+                                                                      color: Color(
+                                                                          0x391C1C1C),
+                                                                      offset: Offset(
+                                                                          0.0,
+                                                                          0.0),
+                                                                      blurRadius:
+                                                                          2.0,
+                                                                    )
+                                                                  ],
+                                                                  useGoogleFonts:
+                                                                      !FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyMediumIsCustom,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    if (projectsItem
+                                                            .projectStatus ==
+                                                        'inactive')
+                                                      Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .alternate,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      8.0),
+                                                        ),
+                                                        alignment:
+                                                            AlignmentDirectional(
+                                                                0.0, 0.0),
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  8.0),
+                                                          child: Text(
+                                                            'Inactive',
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .bodyMedium
+                                                                .override(
+                                                                  fontFamily: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMediumFamily,
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .primaryText,
+                                                                  fontSize:
+                                                                      12.0,
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  shadows: [
+                                                                    Shadow(
+                                                                      color: Color(
+                                                                          0x391C1C1C),
+                                                                      offset: Offset(
+                                                                          0.0,
+                                                                          0.0),
+                                                                      blurRadius:
+                                                                          2.0,
+                                                                    )
+                                                                  ],
+                                                                  useGoogleFonts:
+                                                                      !FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyMediumIsCustom,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      Container(
-                                        width:
-                                            MediaQuery.sizeOf(context).width *
-                                                1.0,
-                                        decoration: BoxDecoration(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryBackground,
-                                          borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(12.0),
-                                            bottomRight: Radius.circular(12.0),
-                                            topLeft: Radius.circular(0.0),
-                                            topRight: Radius.circular(0.0),
-                                          ),
+                                          ],
                                         ),
-                                        child: Padding(
-                                          padding: EdgeInsets.all(14.0),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Amount raised',
-                                                maxLines: 2,
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .override(
-                                                          fontFamily:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .labelMediumFamily,
-                                                          color: Colors.black,
-                                                          fontSize: 10.0,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.w300,
-                                                          useGoogleFonts:
-                                                              !FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .labelMediumIsCustom,
-                                                        ),
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 0.0, 0.0, 8.0),
-                                                child: Text(
-                                                  valueOrDefault<String>(
-                                                    functions.safeCurrency(
-                                                        projectsItem
-                                                            .totalRaised!,
-                                                        FFAppState().currency),
-                                                    'N200,000,000',
-                                                  ),
-                                                  maxLines: 1,
+                                        Container(
+                                          width:
+                                              MediaQuery.sizeOf(context).width *
+                                                  1.0,
+                                          decoration: BoxDecoration(
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryBackground,
+                                            borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(12.0),
+                                              bottomRight:
+                                                  Radius.circular(12.0),
+                                              topLeft: Radius.circular(0.0),
+                                              topRight: Radius.circular(0.0),
+                                            ),
+                                          ),
+                                          child: Padding(
+                                            padding: EdgeInsets.all(14.0),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.max,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'Amount raised',
+                                                  maxLines: 2,
                                                   style:
                                                       FlutterFlowTheme.of(
                                                               context)
-                                                          .headlineSmall
+                                                          .labelMedium
                                                           .override(
                                                             fontFamily:
                                                                 FlutterFlowTheme.of(
                                                                         context)
-                                                                    .headlineSmallFamily,
-                                                            fontSize: 22.0,
+                                                                    .labelMediumFamily,
+                                                            color: Colors.black,
+                                                            fontSize: 10.0,
                                                             letterSpacing: 0.0,
                                                             fontWeight:
-                                                                FontWeight.bold,
+                                                                FontWeight.w300,
                                                             useGoogleFonts:
                                                                 !FlutterFlowTheme.of(
                                                                         context)
-                                                                    .headlineSmallIsCustom,
+                                                                    .labelMediumIsCustom,
                                                           ),
                                                 ),
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 4.0, 0.0, 4.0),
-                                                child: Text(
+                                                Padding(
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          0.0, 0.0, 0.0, 8.0),
+                                                  child: Text(
+                                                    valueOrDefault<String>(
+                                                      functions.safeCurrency(
+                                                          projectsItem
+                                                              .totalRaised!,
+                                                          FFAppState()
+                                                              .currency),
+                                                      'N200,000,000',
+                                                    ),
+                                                    maxLines: 1,
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .headlineSmall
+                                                        .override(
+                                                          fontFamily:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .headlineSmallFamily,
+                                                          fontSize: 22.0,
+                                                          letterSpacing: 0.0,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          useGoogleFonts:
+                                                              !FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .headlineSmallIsCustom,
+                                                        ),
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          0.0, 4.0, 0.0, 4.0),
+                                                  child: Text(
+                                                    valueOrDefault<String>(
+                                                      projectsItem.projectTitle,
+                                                      'null',
+                                                    ),
+                                                    maxLines: 1,
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .labelLarge
+                                                        .override(
+                                                          fontFamily:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .labelLargeFamily,
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .secondaryText,
+                                                          fontSize: 14.0,
+                                                          letterSpacing: 0.0,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          useGoogleFonts:
+                                                              !FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .labelLargeIsCustom,
+                                                        ),
+                                                  ),
+                                                ),
+                                                Text(
                                                   valueOrDefault<String>(
-                                                    projectsItem.projectTitle,
+                                                    projectsItem.description,
                                                     'null',
                                                   ),
-                                                  maxLines: 1,
+                                                  maxLines: 2,
                                                   style: FlutterFlowTheme.of(
                                                           context)
-                                                      .labelLarge
+                                                      .labelMedium
                                                       .override(
                                                         fontFamily:
                                                             FlutterFlowTheme.of(
                                                                     context)
-                                                                .labelLargeFamily,
+                                                                .labelMediumFamily,
                                                         color:
                                                             FlutterFlowTheme.of(
                                                                     context)
-                                                                .secondaryText,
-                                                        fontSize: 14.0,
+                                                                .info,
+                                                        fontSize: 12.0,
                                                         letterSpacing: 0.0,
                                                         fontWeight:
-                                                            FontWeight.w500,
+                                                            FontWeight.w300,
                                                         useGoogleFonts:
                                                             !FlutterFlowTheme
                                                                     .of(context)
-                                                                .labelLargeIsCustom,
+                                                                .labelMediumIsCustom,
                                                       ),
                                                 ),
-                                              ),
-                                              Text(
-                                                valueOrDefault<String>(
-                                                  projectsItem.description,
-                                                  'null',
-                                                ),
-                                                maxLines: 2,
-                                                style: FlutterFlowTheme.of(
-                                                        context)
-                                                    .labelMedium
-                                                    .override(
-                                                      fontFamily:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .labelMediumFamily,
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .info,
-                                                      fontSize: 12.0,
-                                                      letterSpacing: 0.0,
-                                                      fontWeight:
-                                                          FontWeight.w300,
-                                                      useGoogleFonts:
-                                                          !FlutterFlowTheme.of(
-                                                                  context)
-                                                              .labelMediumIsCustom,
-                                                    ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              );
+                                );
                               }).divide(SizedBox(width: 16.0)),
                               if (_model.projectHasMore)
-                              Padding(
-                                padding: EdgeInsets.all(10.0),
-                                child: FFButtonWidget(
-                                  onPressed: () async {
-                                    await _model.fetchNextProjects();
-                                    safeSetState(() {});
-                                  },
-                                  text: _model.projectLoading
-                                      ? 'Loading...'
-                                      : 'Load More',
-                                  options: FFButtonOptions(
-                                    width: 100.0,
-                                    height: 40.0,
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        16.0, 0.0, 16.0, 0.0),
-                                    iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 0.0, 0.0, 0.0),
-                                    color: FlutterFlowTheme.of(context).primary,
-                                    textStyle: FlutterFlowTheme.of(context)
-                                        .titleSmall
-                                        .override(
-                                          fontFamily:
-                                              FlutterFlowTheme.of(context)
-                                                  .titleSmallFamily,
-                                          color: Colors.white,
-                                          fontSize: 12.0,
-                                          letterSpacing: 0.0,
-                                          useGoogleFonts: !FlutterFlowTheme.of(
-                                                  context)
-                                              .titleSmallIsCustom,
-                                        ),
-                                    elevation: 0.0,
-                                    borderRadius: BorderRadius.circular(8.0),
+                                Padding(
+                                  padding: EdgeInsets.all(10.0),
+                                  child: FFButtonWidget(
+                                    onPressed: () async {
+                                      await _model.fetchNextProjects();
+                                      safeSetState(() {});
+                                    },
+                                    text: _model.projectLoading
+                                        ? 'Loading...'
+                                        : 'Load More',
+                                    options: FFButtonOptions(
+                                      width: 100.0,
+                                      height: 40.0,
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          16.0, 0.0, 16.0, 0.0),
+                                      iconPadding:
+                                          EdgeInsetsDirectional.fromSTEB(
+                                              0.0, 0.0, 0.0, 0.0),
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      textStyle: FlutterFlowTheme.of(context)
+                                          .titleSmall
+                                          .override(
+                                            fontFamily:
+                                                FlutterFlowTheme.of(context)
+                                                    .titleSmallFamily,
+                                            color: Colors.white,
+                                            fontSize: 12.0,
+                                            letterSpacing: 0.0,
+                                            useGoogleFonts:
+                                                !FlutterFlowTheme.of(context)
+                                                    .titleSmallIsCustom,
+                                          ),
+                                      elevation: 0.0,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
                                   ),
                                 ),
-                              ),
                             ],
                           );
                         },
@@ -1488,8 +1506,8 @@ class _AdminhomeWidgetState extends State<AdminhomeWidget> {
                                 }).divide(SizedBox(height: 8.0)),
                                 if (_model.transactionHasMore)
                                   Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 16.0),
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 16.0),
                                     child: FFButtonWidget(
                                       onPressed: () async {
                                         await _model.fetchNextTransactions();
@@ -1517,9 +1535,9 @@ class _AdminhomeWidgetState extends State<AdminhomeWidget> {
                                               color: Colors.white,
                                               fontSize: 12.0,
                                               letterSpacing: 0.0,
-                                              useGoogleFonts: !FlutterFlowTheme
-                                                      .of(context)
-                                                  .titleSmallIsCustom,
+                                              useGoogleFonts:
+                                                  !FlutterFlowTheme.of(context)
+                                                      .titleSmallIsCustom,
                                             ),
                                         elevation: 0.0,
                                         borderRadius:

@@ -93,30 +93,35 @@ class _TransactionHistoryWidgetState extends State<TransactionHistoryWidget> {
                 Align(
                   alignment: AlignmentDirectional(-1.0, 0.0),
                   child: Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 12.0, 0.0, 8.0),
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(0.0, 12.0, 0.0, 8.0),
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 0.0, 0.0),
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              16.0, 0.0, 0.0, 0.0),
                           child: Text(
                             'Transactions',
                             style: FlutterFlowTheme.of(context).headlineMedium,
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 0.0, 0.0),
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              16.0, 0.0, 0.0, 0.0),
                           child: Text(
                             'View all member transactions',
-                            style: FlutterFlowTheme.of(context).bodyLarge.override(
-                                  fontFamily: 'Inter',
-                                  fontSize: 14.0,
-                                ),
+                            style:
+                                FlutterFlowTheme.of(context).bodyLarge.override(
+                                      fontFamily: 'Inter',
+                                      fontSize: 14.0,
+                                    ),
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 0.0),
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              16.0, 16.0, 16.0, 0.0),
                           child: TextFormField(
                             controller: _model.searchfiledTextController,
                             focusNode: _model.searchfiledFocusNode,
@@ -124,16 +129,19 @@ class _TransactionHistoryWidgetState extends State<TransactionHistoryWidget> {
                               '_model.searchfiledTextController',
                               Duration(milliseconds: 300),
                               () async {
-                                await _model.fetchNextTransactions(isRefresh: true);
+                                await _model.fetchNextTransactions(
+                                    isRefresh: true);
                                 safeSetState(() {});
                               },
                             ),
                             decoration: InputDecoration(
                               labelText: 'Find transaction by email or name...',
-                              labelStyle: FlutterFlowTheme.of(context).labelMedium,
+                              labelStyle:
+                                  FlutterFlowTheme.of(context).labelMedium,
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).primaryBackground,
+                                  color: FlutterFlowTheme.of(context)
+                                      .primaryBackground,
                                   width: 2.0,
                                 ),
                                 borderRadius: BorderRadius.circular(8.0),
@@ -146,10 +154,12 @@ class _TransactionHistoryWidgetState extends State<TransactionHistoryWidget> {
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                               filled: true,
-                              fillColor: FlutterFlowTheme.of(context).primaryBackground,
+                              fillColor: FlutterFlowTheme.of(context)
+                                  .primaryBackground,
                               prefixIcon: Icon(
                                 Icons.search_outlined,
-                                color: FlutterFlowTheme.of(context).secondaryText,
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
                               ),
                             ),
                             style: FlutterFlowTheme.of(context).bodyMedium,
@@ -169,17 +179,23 @@ class _TransactionHistoryWidgetState extends State<TransactionHistoryWidget> {
                         FlutterFlowChoiceChips(
                           options: [
                             ChipData('all'),
-                            ...['partnership', 'projects', 'freewill'].map((label) => ChipData(label)).toList(),
+                            ...['partnership', 'projects', 'freewill']
+                                .map((label) => ChipData(label))
+                                .toList(),
                           ],
                           onChanged: (val) async {
-                            safeSetState(() => _model.choiceChipsValue = val?.firstOrNull);
+                            safeSetState(() =>
+                                _model.choiceChipsValue = val?.firstOrNull);
                             _model.tab = _model.choiceChipsValue ?? 'all';
                             await _model.fetchNextTransactions(isRefresh: true);
                             safeSetState(() {});
                           },
                           selectedChipStyle: ChipStyle(
-                            backgroundColor: FlutterFlowTheme.of(context).primary,
-                            textStyle: FlutterFlowTheme.of(context).bodyMedium.override(
+                            backgroundColor:
+                                FlutterFlowTheme.of(context).primary,
+                            textStyle: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
                                   fontFamily: 'Inter',
                                   color: Colors.white,
                                   fontSize: 12.0,
@@ -194,7 +210,8 @@ class _TransactionHistoryWidgetState extends State<TransactionHistoryWidget> {
                           chipSpacing: 8.0,
                           multiselect: false,
                           initialized: _model.choiceChipsValue != null,
-                          controller: _model.choiceChipsValueController ??= FormFieldController<List<String>>(['all']),
+                          controller: _model.choiceChipsValueController ??=
+                              FormFieldController<List<String>>(['all']),
                         ),
                       ].divide(SizedBox(width: 8.0)),
                     ),
@@ -202,8 +219,10 @@ class _TransactionHistoryWidgetState extends State<TransactionHistoryWidget> {
                 ),
                 Expanded(
                   child: Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 0.0),
-                    child: _model.transactionCache.isEmpty && !_model.isLoadingTransactions
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 0.0),
+                    child: _model.transactionCache.isEmpty &&
+                            !_model.isLoadingTransactions
                         ? Center(child: EmptyWidget())
                         : ListView(
                             children: [
@@ -254,12 +273,14 @@ class _TransactionHistoryWidgetState extends State<TransactionHistoryWidget> {
                                   child: Center(
                                     child: _model.isLoadingTransactions
                                         ? SpinKitThreeBounce(
-                                            color: FlutterFlowTheme.of(context).primary,
+                                            color: FlutterFlowTheme.of(context)
+                                                .primary,
                                             size: 24.0,
                                           )
                                         : FFButtonWidget(
                                             onPressed: () async {
-                                              await _model.fetchNextTransactions();
+                                              await _model
+                                                  .fetchNextTransactions();
                                               safeSetState(() {});
                                             },
                                             text: 'Load More',
@@ -268,18 +289,25 @@ class _TransactionHistoryWidgetState extends State<TransactionHistoryWidget> {
                                               height: 40.0,
                                               padding: EdgeInsets.zero,
                                               iconPadding: EdgeInsets.zero,
-                                              color: FlutterFlowTheme.of(context).primary,
-                                              textStyle: FlutterFlowTheme.of(context).titleSmall.override(
-                                                    fontFamily: 'Inter',
-                                                    color: Colors.white,
-                                                  ),
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              textStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .titleSmall
+                                                      .override(
+                                                        fontFamily: 'Inter',
+                                                        color: Colors.white,
+                                                      ),
                                               elevation: 2.0,
-                                              borderRadius: BorderRadius.circular(8.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
                                             ),
                                           ),
                                   ),
                                 ),
-                              if (_model.isLoadingTransactions && _model.transactionCache.isEmpty)
+                              if (_model.isLoadingTransactions &&
+                                  _model.transactionCache.isEmpty)
                                 Center(
                                   child: SpinKitThreeBounce(
                                     color: FlutterFlowTheme.of(context).primary,

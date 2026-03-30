@@ -163,7 +163,10 @@ class _RewardsWidgetState extends State<RewardsWidget>
                                     ),
                                   );
                                 },
-                              ).then((value) => safeSetState(() {}));
+                              ).then((value) async {
+                                await _model.fetchNextPage(isRefresh: true);
+                                safeSetState(() {});
+                              });
                             },
                             text: 'Add Reward',
                             icon: Icon(
@@ -349,8 +352,8 @@ class _RewardsWidgetState extends State<RewardsWidget>
                                     );
                                   },
                                   child: Container(
-                                    width: MediaQuery.sizeOf(context).width *
-                                        1.0,
+                                    width:
+                                        MediaQuery.sizeOf(context).width * 1.0,
                                     decoration: BoxDecoration(
                                       color: FlutterFlowTheme.of(context)
                                           .primaryBackground,
@@ -365,8 +368,7 @@ class _RewardsWidgetState extends State<RewardsWidget>
                                           ),
                                         )
                                       ],
-                                      borderRadius:
-                                          BorderRadius.circular(18.0),
+                                      borderRadius: BorderRadius.circular(18.0),
                                     ),
                                     child: Padding(
                                       padding: EdgeInsets.all(12.0),
@@ -476,11 +478,9 @@ class _RewardsWidgetState extends State<RewardsWidget>
                                             flex: 2,
                                             child: Padding(
                                               padding: EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      8.0, 0.0, 0.0, 0.0),
+                                                  .fromSTEB(8.0, 0.0, 0.0, 0.0),
                                               child: Column(
-                                                mainAxisSize:
-                                                    MainAxisSize.max,
+                                                mainAxisSize: MainAxisSize.max,
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 crossAxisAlignment:
@@ -494,32 +494,30 @@ class _RewardsWidgetState extends State<RewardsWidget>
                                                     ),
                                                     maxLines: 2,
                                                     minFontSize: 14.0,
-                                                    style:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .titleMedium
-                                                            .override(
-                                                              fontFamily: FlutterFlowTheme.of(
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .titleMedium
+                                                        .override(
+                                                          fontFamily:
+                                                              FlutterFlowTheme.of(
                                                                       context)
                                                                   .titleMediumFamily,
-                                                              color: FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .primaryText,
-                                                              fontSize: 14.0,
-                                                              letterSpacing:
-                                                                  0.0,
-                                                              useGoogleFonts:
-                                                                  !FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .titleMediumIsCustom,
-                                                            ),
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primaryText,
+                                                          fontSize: 14.0,
+                                                          letterSpacing: 0.0,
+                                                          useGoogleFonts:
+                                                              !FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .titleMediumIsCustom,
+                                                        ),
                                                   ),
                                                   Row(
                                                     mainAxisSize:
                                                         MainAxisSize.max,
                                                     mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .start,
+                                                        MainAxisAlignment.start,
                                                     children: [
                                                       if (columnRewardsWithStatsRow
                                                               .rewardType ==
@@ -536,12 +534,12 @@ class _RewardsWidgetState extends State<RewardsWidget>
                                                           ),
                                                           child: Padding(
                                                             padding:
-                                                                EdgeInsets
-                                                                    .all(6.0),
+                                                                EdgeInsets.all(
+                                                                    6.0),
                                                             child: Text(
                                                               'PDF',
-                                                              style: FlutterFlowTheme.of(
-                                                                      context)
+                                                              style: FlutterFlowTheme
+                                                                      .of(context)
                                                                   .labelMedium
                                                                   .override(
                                                                     fontFamily:
@@ -578,12 +576,12 @@ class _RewardsWidgetState extends State<RewardsWidget>
                                                           ),
                                                           child: Padding(
                                                             padding:
-                                                                EdgeInsets
-                                                                    .all(6.0),
+                                                                EdgeInsets.all(
+                                                                    6.0),
                                                             child: Text(
                                                               'Ticket',
-                                                              style: FlutterFlowTheme.of(
-                                                                      context)
+                                                              style: FlutterFlowTheme
+                                                                      .of(context)
                                                                   .labelMedium
                                                                   .override(
                                                                     fontFamily:
@@ -620,12 +618,12 @@ class _RewardsWidgetState extends State<RewardsWidget>
                                                           ),
                                                           child: Padding(
                                                             padding:
-                                                                EdgeInsets
-                                                                    .all(6.0),
+                                                                EdgeInsets.all(
+                                                                    6.0),
                                                             child: Text(
                                                               'Content',
-                                                              style: FlutterFlowTheme.of(
-                                                                      context)
+                                                              style: FlutterFlowTheme
+                                                                      .of(context)
                                                                   .labelMedium
                                                                   .override(
                                                                     fontFamily:
@@ -662,12 +660,12 @@ class _RewardsWidgetState extends State<RewardsWidget>
                                                           ),
                                                           child: Padding(
                                                             padding:
-                                                                EdgeInsets
-                                                                    .all(6.0),
+                                                                EdgeInsets.all(
+                                                                    6.0),
                                                             child: Text(
                                                               'Media',
-                                                              style: FlutterFlowTheme.of(
-                                                                      context)
+                                                              style: FlutterFlowTheme
+                                                                      .of(context)
                                                                   .labelMedium
                                                                   .override(
                                                                     fontFamily:
@@ -692,33 +690,34 @@ class _RewardsWidgetState extends State<RewardsWidget>
                                                             "MMMEd",
                                                             columnRewardsWithStatsRow
                                                                 .createdAt),
-                                                        style: FlutterFlowTheme
-                                                                .of(context)
-                                                            .labelMedium
-                                                            .override(
-                                                              fontFamily:
-                                                                  FlutterFlowTheme.of(context)
+                                                        style:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .labelMedium
+                                                                .override(
+                                                                  fontFamily: FlutterFlowTheme.of(
+                                                                          context)
                                                                       .labelMediumFamily,
-                                                              color: FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .secondaryText,
-                                                              fontSize:
-                                                                  10.0,
-                                                              letterSpacing:
-                                                                  0.0,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .normal,
-                                                              useGoogleFonts:
-                                                                  !FlutterFlowTheme.of(context)
-                                                                      .labelMediumIsCustom,
-                                                            ),
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .secondaryText,
+                                                                  fontSize:
+                                                                      10.0,
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .normal,
+                                                                  useGoogleFonts:
+                                                                      !FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .labelMediumIsCustom,
+                                                                ),
                                                       ),
                                                     ].divide(
                                                         SizedBox(width: 4.0)),
                                                   ),
-                                                ].divide(
-                                                    SizedBox(height: 4.0)),
+                                                ].divide(SizedBox(height: 4.0)),
                                               ),
                                             ),
                                           ),

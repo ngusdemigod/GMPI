@@ -581,7 +581,8 @@ class _PlandetailsWidgetState extends State<PlandetailsWidget> {
                                 List<MemberDetailsPlusMembershipSummaryRow>
                                     listViewMemberDetailsPlusMembershipSummaryRowList =
                                     snapshot.data!;
-                                if (listViewMemberDetailsPlusMembershipSummaryRowList.isEmpty) {
+                                if (listViewMemberDetailsPlusMembershipSummaryRowList
+                                    .isEmpty) {
                                   return EmptyWidget();
                                 }
 
@@ -629,6 +630,12 @@ class _PlandetailsWidgetState extends State<PlandetailsWidget> {
                                                   width: 32.0,
                                                   height: 32.0,
                                                   fit: BoxFit.cover,
+                                                  errorBuilder: (context, error,
+                                                          stackTrace) =>
+                                                      Image.asset(
+                                                    'assets/images/error_image.jpg',
+                                                    fit: BoxFit.cover,
+                                                  ),
                                                 ),
                                               ),
                                             ),

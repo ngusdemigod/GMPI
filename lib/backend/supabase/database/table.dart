@@ -13,7 +13,8 @@ abstract class SupabaseTable<T extends SupabaseDataRow> {
   }) {
     final select = _select();
     var query = queryFn(select);
-    if (offset != null) query = query.range(offset, offset + (limit ?? 1000) - 1);
+    if (offset != null)
+      query = query.range(offset, offset + (limit ?? 1000) - 1);
     query = limit != null && offset == null ? query.limit(limit) : query;
     return query.select().then((rows) => rows.map(createRow).toList());
   }

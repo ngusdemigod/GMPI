@@ -183,6 +183,11 @@ class _Card12ProjectWidgetState extends State<Card12ProjectWidget>
                               child: Image.network(
                                 'https://images.unsplash.com/photo-1610737241336-371badac3b66?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NDV8fHVzZXJ8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60',
                                 fit: BoxFit.fitWidth,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Image.asset(
+                                  'assets/images/error_image.jpg',
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           ),
@@ -198,6 +203,11 @@ class _Card12ProjectWidgetState extends State<Card12ProjectWidget>
                               child: Image.network(
                                 'https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NDJ8fHVzZXJ8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60',
                                 fit: BoxFit.fitWidth,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Image.asset(
+                                  'assets/images/error_image.jpg',
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           ),
@@ -213,6 +223,11 @@ class _Card12ProjectWidgetState extends State<Card12ProjectWidget>
                               child: Image.network(
                                 'https://images.unsplash.com/photo-1598346762291-aee88549193f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NTV8fHVzZXJ8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60',
                                 fit: BoxFit.fitHeight,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Image.asset(
+                                  'assets/images/error_image.jpg',
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           ),

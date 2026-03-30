@@ -271,8 +271,7 @@ class _PartnerlistWidgetState extends State<PartnerlistWidget>
                               child: Column(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
-                                  ...List.generate(partners.length,
-                                      (index) {
+                                  ...List.generate(partners.length, (index) {
                                     final item = partners[index];
                                     return Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
@@ -294,8 +293,8 @@ class _PartnerlistWidgetState extends State<PartnerlistWidget>
                                                   onTap: () {
                                                     FocusScope.of(context)
                                                         .unfocus();
-                                                    FocusManager.instance
-                                                        .primaryFocus
+                                                    FocusManager
+                                                        .instance.primaryFocus
                                                         ?.unfocus();
                                                   },
                                                   child: Padding(
@@ -313,7 +312,11 @@ class _PartnerlistWidgetState extends State<PartnerlistWidget>
                                                 ),
                                               );
                                             },
-                                          ).then((value) => safeSetState(() {}));
+                                          ).then((value) async {
+                                            await _model.fetchNextPage(
+                                                isRefresh: true);
+                                            safeSetState(() {});
+                                          });
                                         },
                                         child: Container(
                                           width:
@@ -325,9 +328,9 @@ class _PartnerlistWidgetState extends State<PartnerlistWidget>
                                             boxShadow: [
                                               BoxShadow(
                                                 blurRadius: 0.0,
-                                                color: FlutterFlowTheme.of(
-                                                        context)
-                                                    .alternate,
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .alternate,
                                                 offset: Offset(0.0, 1.0),
                                               )
                                             ],
@@ -368,29 +371,33 @@ class _PartnerlistWidgetState extends State<PartnerlistWidget>
                                                           EdgeInsets.all(8.0),
                                                       child: Text(
                                                         valueOrDefault<String>(
-                                                          functions.initialsgenerator(
-                                                              item.firstname,
-                                                              item.lastname),
+                                                          functions
+                                                              .initialsgenerator(
+                                                                  item.firstname,
+                                                                  item.lastname),
                                                           'SA',
                                                         ),
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .override(
-                                                                  fontFamily:
-                                                                      FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                                  color: Color(
-                                                                      0xFF0A904B),
-                                                                  fontSize:
-                                                                      18.0,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  useGoogleFonts: !FlutterFlowTheme.of(context).bodyMediumIsCustom,
-                                                                ),
+                                                        style: FlutterFlowTheme
+                                                                .of(context)
+                                                            .bodyMedium
+                                                            .override(
+                                                              fontFamily:
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMediumFamily,
+                                                              color: Color(
+                                                                  0xFF0A904B),
+                                                              fontSize: 18.0,
+                                                              letterSpacing:
+                                                                  0.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              useGoogleFonts:
+                                                                  !FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMediumIsCustom,
+                                                            ),
                                                       ),
                                                     ),
                                                   ),
@@ -413,22 +420,24 @@ class _PartnerlistWidgetState extends State<PartnerlistWidget>
                                                                     0.0),
                                                         child: Text(
                                                           '${item.lastname} ${item.firstname}',
-                                                          style:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyLarge
-                                                                  .override(
-                                                                    fontFamily:
-                                                                        FlutterFlowTheme.of(context).bodyLargeFamily,
-                                                                    fontSize:
-                                                                        14.0,
-                                                                    letterSpacing:
-                                                                        0.0,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                    useGoogleFonts: !FlutterFlowTheme.of(context).bodyLargeIsCustom,
-                                                                  ),
+                                                          style: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .bodyLarge
+                                                              .override(
+                                                                fontFamily: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyLargeFamily,
+                                                                fontSize: 14.0,
+                                                                letterSpacing:
+                                                                    0.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                useGoogleFonts:
+                                                                    !FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyLargeIsCustom,
+                                                              ),
                                                         ),
                                                       ),
                                                       Padding(
@@ -449,19 +458,22 @@ class _PartnerlistWidgetState extends State<PartnerlistWidget>
                                                                 item.partnershipTitle,
                                                                 'null',
                                                               ),
-                                                              style: FlutterFlowTheme.of(
-                                                                      context)
+                                                              style: FlutterFlowTheme
+                                                                      .of(context)
                                                                   .bodyMedium
                                                                   .override(
                                                                     fontFamily:
-                                                                        FlutterFlowTheme.of(context).bodyMediumFamily,
+                                                                        FlutterFlowTheme.of(context)
+                                                                            .bodyMediumFamily,
                                                                     color: Color(
                                                                         0xFF068544),
                                                                     fontSize:
                                                                         12.0,
                                                                     letterSpacing:
                                                                         0.0,
-                                                                    useGoogleFonts: !FlutterFlowTheme.of(context).bodyMediumIsCustom,
+                                                                    useGoogleFonts:
+                                                                        !FlutterFlowTheme.of(context)
+                                                                            .bodyMediumIsCustom,
                                                                   ),
                                                             ),
                                                           ],
@@ -492,11 +504,16 @@ class _PartnerlistWidgetState extends State<PartnerlistWidget>
                                                         .bodyMedium
                                                         .override(
                                                           fontFamily:
-                                                              FlutterFlowTheme.of(context).bodyMediumFamily,
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMediumFamily,
                                                           letterSpacing: 0.0,
                                                           fontWeight:
                                                               FontWeight.w500,
-                                                          useGoogleFonts: !FlutterFlowTheme.of(context).bodyMediumIsCustom,
+                                                          useGoogleFonts:
+                                                              !FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .bodyMediumIsCustom,
                                                         ),
                                                   ),
                                                 ),
@@ -509,8 +526,8 @@ class _PartnerlistWidgetState extends State<PartnerlistWidget>
                                   }).divide(SizedBox(height: 4.0)),
                                   if (_model.hasMore)
                                     Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 16.0),
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 16.0),
                                       child: FFButtonWidget(
                                         onPressed: () async {
                                           await _model.fetchNextPage();
@@ -534,15 +551,16 @@ class _PartnerlistWidgetState extends State<PartnerlistWidget>
                                                   context)
                                               .titleSmall
                                               .override(
-                                                fontFamily: FlutterFlowTheme.of(
-                                                        context)
-                                                    .titleSmallFamily,
+                                                fontFamily:
+                                                    FlutterFlowTheme.of(context)
+                                                        .titleSmallFamily,
                                                 color: Colors.white,
                                                 fontSize: 14.0,
                                                 letterSpacing: 0.0,
-                                                useGoogleFonts: !FlutterFlowTheme.of(
-                                                        context)
-                                                    .titleSmallIsCustom,
+                                                useGoogleFonts:
+                                                    !FlutterFlowTheme.of(
+                                                            context)
+                                                        .titleSmallIsCustom,
                                               ),
                                           elevation: 0.0,
                                           borderRadius:

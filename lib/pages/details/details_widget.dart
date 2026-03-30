@@ -203,6 +203,11 @@ class _DetailsWidgetState extends State<DetailsWidget> {
                                   width: MediaQuery.sizeOf(context).width * 1.0,
                                   height: 230.0,
                                   fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Image.asset(
+                                    'assets/images/error_image.jpg',
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                               Padding(

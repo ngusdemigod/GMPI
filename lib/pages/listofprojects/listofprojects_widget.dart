@@ -46,7 +46,7 @@ class _ListofprojectsWidgetState extends State<ListofprojectsWidget>
     _model.textController ??= TextEditingController();
     _model.textFieldFocusNode ??= FocusNode();
     _model.textFieldFocusNode!.addListener(() => safeSetState(() {}));
-    
+
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       await _model.fetchNextPage();
       safeSetState(() {});
@@ -241,7 +241,11 @@ class _ListofprojectsWidgetState extends State<ListofprojectsWidget>
                                               ),
                                             );
                                           },
-                                        ).then((value) => safeSetState(() {}));
+                                        ).then((value) async {
+                                          await _model.fetchNextPage(
+                                              isRefresh: true);
+                                          safeSetState(() {});
+                                        });
                                       },
                                       text: 'Add Project',
                                       icon: Icon(
@@ -420,9 +424,10 @@ class _ListofprojectsWidgetState extends State<ListofprojectsWidget>
                                             child: Center(
                                               child: _model.loading
                                                   ? SpinKitFadingCube(
-                                                      color: FlutterFlowTheme.of(
-                                                              context)
-                                                          .primary,
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primary,
                                                       size: 24.0,
                                                     )
                                                   : FFButtonWidget(
@@ -458,15 +463,17 @@ class _ListofprojectsWidgetState extends State<ListofprojectsWidget>
                                                                     context)
                                                                 .titleSmall
                                                                 .override(
-                                                                  fontFamily:
-                                                                      FlutterFlowTheme.of(context)
-                                                                          .titleSmallFamily,
+                                                                  fontFamily: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .titleSmallFamily,
                                                                   color: Colors
                                                                       .white,
                                                                   letterSpacing:
                                                                       0.0,
-                                                                  useGoogleFonts: !FlutterFlowTheme.of(context)
-                                                                      .titleSmallIsCustom,
+                                                                  useGoogleFonts:
+                                                                      !FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .titleSmallIsCustom,
                                                                 ),
                                                         elevation: 2.0,
                                                         borderRadius:
@@ -540,6 +547,13 @@ class _ListofprojectsWidgetState extends State<ListofprojectsWidget>
                                                           fit: BoxFit.cover,
                                                           alignment: Alignment(
                                                               0.0, 0.0),
+                                                          errorBuilder: (context,
+                                                                  error,
+                                                                  stackTrace) =>
+                                                              Image.asset(
+                                                            'assets/images/error_image.jpg',
+                                                            fit: BoxFit.cover,
+                                                          ),
                                                         ),
                                                       ),
                                                     ),

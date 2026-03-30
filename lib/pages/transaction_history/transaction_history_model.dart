@@ -73,8 +73,9 @@ class TransactionHistoryModel
         if (typeFilter != null) {
           filtered = filtered.eq('transaction_type', typeFilter);
         }
-        return filtered.order('paid_at', ascending: false).range(
-            transactionOffset, transactionOffset + transactionLimit - 1);
+        return filtered
+            .order('paid_at', ascending: false)
+            .range(transactionOffset, transactionOffset + transactionLimit - 1);
       },
     );
 

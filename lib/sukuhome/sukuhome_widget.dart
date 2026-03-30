@@ -697,6 +697,12 @@ class _SukuhomeWidgetState extends State<SukuhomeWidget> {
                                       width: 120.0,
                                       height: 120.0,
                                       fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (context, error, stackTrace) =>
+                                              Image.asset(
+                                        'assets/images/error_image.jpg',
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -860,6 +866,12 @@ class _SukuhomeWidgetState extends State<SukuhomeWidget> {
                                         width: 120.0,
                                         height: 120.0,
                                         fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) =>
+                                                Image.asset(
+                                          'assets/images/error_image.jpg',
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -1089,6 +1101,12 @@ class _SukuhomeWidgetState extends State<SukuhomeWidget> {
                                             width: 120.0,
                                             height: 120.0,
                                             fit: BoxFit.cover,
+                                            errorBuilder:
+                                                (context, error, stackTrace) =>
+                                                    Image.asset(
+                                              'assets/images/error_image.jpg',
+                                              fit: BoxFit.cover,
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -1261,6 +1279,12 @@ class _SukuhomeWidgetState extends State<SukuhomeWidget> {
                                             width: 120.0,
                                             height: 120.0,
                                             fit: BoxFit.cover,
+                                            errorBuilder:
+                                                (context, error, stackTrace) =>
+                                                    Image.asset(
+                                              'assets/images/error_image.jpg',
+                                              fit: BoxFit.cover,
+                                            ),
                                           ),
                                         ),
                                       ),

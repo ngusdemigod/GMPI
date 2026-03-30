@@ -174,6 +174,11 @@ class _PayconfirmationWidgetState extends State<PayconfirmationWidget>
                                 width: 80.0,
                                 height: 80.0,
                                 fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Image.asset(
+                                  'assets/images/error_image.jpg',
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           ),
