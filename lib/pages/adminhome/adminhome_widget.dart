@@ -937,9 +937,9 @@ class _AdminhomeWidgetState extends State<AdminhomeWidget> {
                                 fontFamily: FlutterFlowTheme.of(context)
                                     .titleSmallFamily,
                                 color: Color(0xFF024326),
-                                fontSize: 7.0,
+                                fontSize: 12.0,
                                 letterSpacing: 0.0,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w600,
                                 useGoogleFonts: !FlutterFlowTheme.of(context)
                                     .titleSmallIsCustom,
                               ),
@@ -1432,9 +1432,9 @@ class _AdminhomeWidgetState extends State<AdminhomeWidget> {
                                       fontFamily: FlutterFlowTheme.of(context)
                                           .titleSmallFamily,
                                       color: Color(0xFF024326),
-                                      fontSize: 10.0,
+                                      fontSize: 12.0,
                                       letterSpacing: 0.0,
-                                      fontWeight: FontWeight.w500,
+                                      fontWeight: FontWeight.w600,
                                       useGoogleFonts:
                                           !FlutterFlowTheme.of(context)
                                               .titleSmallIsCustom,

@@ -264,6 +264,37 @@ class _Gmpi1WidgetState extends State<Gmpi1Widget>
         backgroundColor: Colors.black,
         body: Stack(
           children: [
+            Positioned(
+              top: MediaQuery.paddingOf(context).top + 10.0,
+              right: 16.0,
+              child: FFButtonWidget(
+                onPressed: () async {
+                  context.goNamed(Login6Widget.routeName);
+                },
+                text: 'Skip',
+                options: FFButtonOptions(
+                  width: 70.0,
+                  height: 36.0,
+                  padding: EdgeInsets.zero,
+                  iconPadding: EdgeInsets.zero,
+                  color: Colors.transparent,
+                  textStyle: FlutterFlowTheme.of(context).bodyMedium.override(
+                        fontFamily:
+                            FlutterFlowTheme.of(context).bodyMediumFamily,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        useGoogleFonts: !FlutterFlowTheme.of(context)
+                            .bodyMediumIsCustom,
+                      ),
+                  elevation: 0.0,
+                  borderSide: BorderSide(
+                    color: Colors.white,
+                    width: 1.0,
+                  ),
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+              ),
+            ),
             Transform.rotate(
               angle: 0.0 * (math.pi / 180),
               child: Opacity(

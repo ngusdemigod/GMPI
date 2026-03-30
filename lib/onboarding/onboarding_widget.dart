@@ -49,7 +49,7 @@ class _OnboardingWidgetState extends State<OnboardingWidget>
       safeSetState(() {});
       await Future.delayed(
         Duration(
-          milliseconds: 5000,
+          milliseconds: 1500,
         ),
       );
 
