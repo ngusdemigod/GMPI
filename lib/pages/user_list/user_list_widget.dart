@@ -91,9 +91,13 @@ class _UserListWidgetState extends State<UserListWidget>
         ),
         body: SafeArea(
           top: true,
-          child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
-            child: Column(
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: Container(
+              constraints: BoxConstraints(maxWidth: 800.0),
+              child: Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
+                child: Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -470,6 +474,8 @@ class _UserListWidgetState extends State<UserListWidget>
                                                               .phoneNumber,
                                                           'null',
                                                         ),
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow.ellipsis,
                                                         style: FlutterFlowTheme
                                                                 .of(context)
                                                             .labelMedium
@@ -491,17 +497,15 @@ class _UserListWidgetState extends State<UserListWidget>
                                                         padding:
                                                             EdgeInsetsDirectional
                                                                 .fromSTEB(
-                                                                    4.0,
-                                                                    0.0,
-                                                                    0.0,
-                                                                    0.0),
+                                                                    0.0, 0.0, 0.0, 0.0),
                                                         child: Text(
-                                                          valueOrDefault<
-                                                              String>(
-                                                            listViewChurchMembersRow
-                                                                .email,
-                                                            'null',
-                                                          ),
+                                                        valueOrDefault<String>(
+                                                          listViewChurchMembersRow
+                                                              .email,
+                                                          'null',
+                                                        ),
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow.ellipsis,
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyMedium
@@ -566,6 +570,8 @@ class _UserListWidgetState extends State<UserListWidget>
                   .divide(SizedBox(height: 8.0))
                   .addToStart(SizedBox(height: 32.0)),
             ),
+          ),
+          ),
           ),
         ),
       ),

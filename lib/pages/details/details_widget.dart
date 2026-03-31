@@ -201,7 +201,7 @@ class _DetailsWidgetState extends State<DetailsWidget> {
                                 child: Image.network(
                                   columnProjectsRow!.featuredImage!,
                                   width: MediaQuery.sizeOf(context).width * 1.0,
-                                  height: 230.0,
+                                  height: MediaQuery.sizeOf(context).height * 0.3,
                                   fit: BoxFit.cover,
                                   errorBuilder: (context, error, stackTrace) =>
                                       Image.asset(

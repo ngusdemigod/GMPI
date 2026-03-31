@@ -42,46 +42,50 @@ class _EmptyWidgetState extends State<EmptyWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(0.0, 48.0, 0.0, 0.0),
-          child: Icon(
-            FFIcons.kmoneyBagDollar,
-            color: FlutterFlowTheme.of(context).secondaryText,
-            size: 48.0,
+    return Container(
+      width: double.infinity,
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(0.0, 48.0, 0.0, 0.0),
+            child: Icon(
+              FFIcons.kmoneyBagDollar,
+              color: FlutterFlowTheme.of(context).secondaryText,
+              size: 48.0,
+            ),
           ),
-        ),
-        Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
-          child: Text(
-            'No Activity',
-            style: FlutterFlowTheme.of(context).headlineMedium.override(
-                  fontFamily: FlutterFlowTheme.of(context).headlineMediumFamily,
-                  fontSize: 12.0,
-                  letterSpacing: 0.0,
-                  useGoogleFonts:
-                      !FlutterFlowTheme.of(context).headlineMediumIsCustom,
-                ),
+          Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
+            child: Text(
+              'No Activity',
+              style: FlutterFlowTheme.of(context).headlineMedium.override(
+                    fontFamily: FlutterFlowTheme.of(context).headlineMediumFamily,
+                    fontSize: 12.0,
+                    letterSpacing: 0.0,
+                    useGoogleFonts:
+                        !FlutterFlowTheme.of(context).headlineMediumIsCustom,
+                  ),
+            ),
           ),
-        ),
-        Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
-          child: Text(
-            'It seems that you don\'t have any recent activity.',
-            textAlign: TextAlign.center,
-            maxLines: 2,
-            style: FlutterFlowTheme.of(context).labelMedium.override(
-                  fontFamily: FlutterFlowTheme.of(context).labelMediumFamily,
-                  letterSpacing: 0.0,
-                  useGoogleFonts:
-                      !FlutterFlowTheme.of(context).labelMediumIsCustom,
-                ),
+          Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+            child: Text(
+              'It seems that you don\'t have any recent activity.',
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              style: FlutterFlowTheme.of(context).labelMedium.override(
+                    fontFamily: FlutterFlowTheme.of(context).labelMediumFamily,
+                    letterSpacing: 0.0,
+                    useGoogleFonts:
+                        !FlutterFlowTheme.of(context).labelMediumIsCustom,
+                  ),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

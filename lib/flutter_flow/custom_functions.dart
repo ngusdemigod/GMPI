@@ -31,7 +31,7 @@ double? calculateprogress(
 }
 
 String? safeCurrency(
-  double amount,
+  double? amount,
   String currency,
 ) {
   final value = amount ?? 0.0;
@@ -121,4 +121,27 @@ dynamic mediaPayload2JSON(MediapayloadStruct? mediapayloadStruct) {
 
 String videopath2string(String videoPath) {
   return videoPath;
+}
+
+String getContentType(String filename) {
+  final ext = filename.split('.').last.toLowerCase();
+  switch (ext) {
+    case 'jpg':
+    case 'jpeg':
+      return 'image/jpeg';
+    case 'png':
+      return 'image/png';
+    case 'webp':
+      return 'image/webp';
+    case 'pdf':
+      return 'application/pdf';
+    case 'mp3':
+      return 'audio/mpeg';
+    case 'wav':
+      return 'audio/wav';
+    case 'm4a':
+      return 'audio/mp4';
+    default:
+      return 'application/octet-stream';
+  }
 }

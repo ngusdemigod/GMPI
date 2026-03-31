@@ -89,7 +89,7 @@ class _AdminhomeWidgetState extends State<AdminhomeWidget> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
+                  padding: EdgeInsetsDirectional.fromSTEB(16.0, 44.0, 16.0, 0.0),
                   child: Container(
                     width: MediaQuery.sizeOf(context).width * 1.0,
                     decoration: BoxDecoration(),
@@ -174,13 +174,13 @@ class _AdminhomeWidgetState extends State<AdminhomeWidget> {
                                     ),
                                   ),
                                 ),
-                                Column(
+                                  Expanded(child: Column(
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Welcome Back,',
+                                      'Hello,',
                                       style: FlutterFlowTheme.of(context)
                                           .headlineMedium
                                           .override(
@@ -198,85 +198,28 @@ class _AdminhomeWidgetState extends State<AdminhomeWidget> {
                                                     .headlineMediumIsCustom,
                                           ),
                                     ),
-                                    InkWell(
-                                      splashColor: Colors.transparent,
-                                      focusColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      onTap: () async {
-                                        GoRouter.of(context).prepareAuthEvent();
-                                        await authManager.signOut();
-                                        GoRouter.of(context)
-                                            .clearRedirectLocation();
-
-                                        context.goNamedAuth(
-                                            Gmpi1Widget.routeName,
-                                            context.mounted);
-                                      },
-                                      child: RichText(
-                                        textScaler:
-                                            MediaQuery.of(context).textScaler,
-                                        text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: valueOrDefault<String>(
-                                                rowChurchMembersRow?.firstname,
-                                                'firstname',
-                                              ),
-                                              style: TextStyle(),
-                                            ),
-                                            TextSpan(
-                                              text: ' ',
-                                              style: TextStyle(),
-                                            ),
-                                            TextSpan(
-                                              text: valueOrDefault<String>(
-                                                rowChurchMembersRow?.lastname,
-                                                'lastname',
-                                              ),
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .headlineMedium
-                                                  .override(
-                                                    fontFamily: FlutterFlowTheme
-                                                            .of(context)
-                                                        .headlineMediumFamily,
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primaryText,
-                                                    fontSize: 14.0,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight: FontWeight.w600,
-                                                    useGoogleFonts:
-                                                        !FlutterFlowTheme.of(
-                                                                context)
-                                                            .headlineMediumIsCustom,
-                                                  ),
-                                            )
-                                          ],
-                                          style: FlutterFlowTheme.of(context)
-                                              .headlineMedium
-                                              .override(
-                                                fontFamily:
-                                                    FlutterFlowTheme.of(context)
-                                                        .headlineMediumFamily,
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primaryText,
-                                                fontSize: 14.0,
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.w600,
-                                                lineHeight: 1.0,
-                                                useGoogleFonts:
-                                                    !FlutterFlowTheme.of(
-                                                            context)
-                                                        .headlineMediumIsCustom,
-                                              ),
-                                        ),
-                                      ),
+                                    Text(
+                                      '${rowChurchMembersRow?.lastname ?? 'Admin'}\n${_model.churchesquery?.firstOrNull?.name ?? 'Brightlight Ministry'}',
+                                      maxLines: 2,
+                                      style: FlutterFlowTheme.of(context)
+                                          .headlineMedium
+                                          .override(
+                                            fontFamily:
+                                                FlutterFlowTheme.of(context)
+                                                    .headlineMediumFamily,
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryText,
+                                            fontSize: 14.0,
+                                            letterSpacing: 0.0,
+                                            fontWeight: FontWeight.w600,
+                                            lineHeight: 1.2,
+                                            useGoogleFonts:
+                                                !FlutterFlowTheme.of(context)
+                                                    .headlineMediumIsCustom,
+                                          ),
                                     ),
                                   ],
-                                ),
+                                ),)
                               ].divide(SizedBox(width: 4.0)),
                             ),
                             Align(
@@ -922,7 +865,7 @@ class _AdminhomeWidgetState extends State<AdminhomeWidget> {
                       ),
                       FFButtonWidget(
                         onPressed: () async {
-                          context.pushNamed(ProjectsWidget.routeName);
+                          context.pushNamed(ListofprojectsWidget.routeName);
                         },
                         text: 'View All',
                         options: FFButtonOptions(
@@ -1040,8 +983,9 @@ class _AdminhomeWidgetState extends State<AdminhomeWidget> {
                                                         : null;
 
                                                 return Hero(
-                                                  tag: imageProjectsRow!
-                                                      .featuredImage!,
+                                                  tag: imageProjectsRow
+                                                          ?.featuredImage ??
+                                                      'no_image_${projectsItem.projectId}',
                                                   transitionOnUserGestures:
                                                       true,
                                                   child: ClipRRect(
@@ -1049,16 +993,19 @@ class _AdminhomeWidgetState extends State<AdminhomeWidget> {
                                                         BorderRadius.circular(
                                                             12.0),
                                                     child: Image.network(
-                                                      imageProjectsRow!
-                                                          .featuredImage!,
+                                                      imageProjectsRow
+                                                              ?.featuredImage ??
+                                                          '',
                                                       width: 243.57,
-                                                      height: 243.57,
+                                                      height: 180.0,
                                                       fit: BoxFit.cover,
                                                       errorBuilder: (context,
                                                               error,
                                                               stackTrace) =>
                                                           Image.asset(
                                                         'assets/images/error_image.jpg',
+                                                        width: 243.57,
+                                                        height: 180.0,
                                                         fit: BoxFit.cover,
                                                       ),
                                                     ),
@@ -1258,7 +1205,7 @@ class _AdminhomeWidgetState extends State<AdminhomeWidget> {
                                                     valueOrDefault<String>(
                                                       functions.safeCurrency(
                                                           projectsItem
-                                                              .totalRaised!,
+                                                              .totalRaised,
                                                           FFAppState()
                                                               .currency),
                                                       'N200,000,000',

@@ -8,6 +8,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/upload_data.dart';
+import '/flutter_flow/custom_snackbar.dart';
 import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
@@ -1815,6 +1816,10 @@ class _CreateRewardsWidgetState extends State<CreateRewardsWidget>
                                                   filename: _model
                                                       .uploadedLocalFile_uploadDataImage
                                                       .originalFilename,
+                                                  contenttype: functions
+                                                      .getContentType(_model
+                                                          .uploadedLocalFile_uploadDataImage
+                                                          .originalFilename),
                                                 );
 
                                                 // upload featured to storage
@@ -1823,7 +1828,7 @@ class _CreateRewardsWidgetState extends State<CreateRewardsWidget>
                                                         .call(
                                                   url: GetUploadURLCall
                                                       .uploadurl(
-                                                    (_model.featuredurl
+                                                    (_model.featuredurlDRAFT
                                                             ?.jsonBody ??
                                                         ''),
                                                   ),
@@ -1852,7 +1857,7 @@ class _CreateRewardsWidgetState extends State<CreateRewardsWidget>
                                                     links: _model.urls,
                                                     thumbnailUrl:
                                                         '${FFAppState().storagePuburl}${GetUploadURLCall.objectkey(
-                                                      (_model.featuredurl
+                                                      (_model.featuredurlDRAFT
                                                               ?.jsonBody ??
                                                           ''),
                                                     )}',
@@ -1873,7 +1878,7 @@ class _CreateRewardsWidgetState extends State<CreateRewardsWidget>
                                                         .text,
                                                     thumbnailUrl:
                                                         '${FFAppState().storagePuburl}${GetUploadURLCall.objectkey(
-                                                      (_model.featuredurl
+                                                      (_model.featuredurlDRAFT
                                                               ?.jsonBody ??
                                                           ''),
                                                     )}',
@@ -1902,7 +1907,7 @@ class _CreateRewardsWidgetState extends State<CreateRewardsWidget>
                                                       : FFAppState().rewardtype,
                                                   'featured_image_url':
                                                       '${FFAppState().storagePuburl}${GetUploadURLCall.objectkey(
-                                                    (_model.featuredurl
+                                                    (_model.featuredurlDRAFT
                                                             ?.jsonBody ??
                                                         ''),
                                                   )}',
@@ -1919,31 +1924,16 @@ class _CreateRewardsWidgetState extends State<CreateRewardsWidget>
                                                       .partnershipUUID,
                                                   'creator_name':
                                                       currentUserUid,
+                                                  'attachment_path': _model
+                                                          .urls.isNotEmpty
+                                                      ? _model.urls.first.link
+                                                      : null,
                                                   'payload': functions
                                                       .mediaPayload2JSON(
                                                           FFAppState()
                                                               .tempPayload),
                                                 });
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                    content: Text(
-                                                      'Uploaded',
-                                                      style: TextStyle(
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primaryText,
-                                                      ),
-                                                    ),
-                                                    duration: Duration(
-                                                        milliseconds: 4000),
-                                                    backgroundColor:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .secondary,
-                                                  ),
-                                                );
+                                                FFSnackbar.show(context, 'Uploaded');
                                                 Navigator.pop(context);
 
                                                 safeSetState(() {});
@@ -2044,8 +2034,10 @@ class _CreateRewardsWidgetState extends State<CreateRewardsWidget>
                                                         filename: _model
                                                             .uploadedLocalFile_uploadDataImage
                                                             .originalFilename,
-                                                        contenttype:
-                                                            'image/jpg',
+                                                        contenttype: functions
+                                                            .getContentType(_model
+                                                                .uploadedLocalFile_uploadDataImage
+                                                                .originalFilename),
                                                       );
 
                                                       // upload featured to storage
@@ -2159,32 +2151,17 @@ class _CreateRewardsWidgetState extends State<CreateRewardsWidget>
                                                             .partnershipUUID,
                                                         'creator_name':
                                                             currentUserUid,
+                                                        'attachment_path': _model
+                                                                .urls.isNotEmpty
+                                                            ? _model.urls.first
+                                                                .link
+                                                            : null,
                                                         'payload': functions
                                                             .mediaPayload2JSON(
                                                                 FFAppState()
                                                                     .tempPayload),
                                                       });
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(
-                                                        SnackBar(
-                                                          content: Text(
-                                                            'Uploaded',
-                                                            style: TextStyle(
-                                                              color: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .primaryText,
-                                                            ),
-                                                          ),
-                                                          duration: Duration(
-                                                              milliseconds:
-                                                                  4000),
-                                                          backgroundColor:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .secondary,
-                                                        ),
-                                                      );
+                                                      FFSnackbar.show(context, 'Uploaded');
                                                       Navigator.pop(context);
 
                                                       safeSetState(() {});

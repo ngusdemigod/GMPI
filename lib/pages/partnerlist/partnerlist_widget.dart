@@ -95,9 +95,13 @@ class _PartnerlistWidgetState extends State<PartnerlistWidget>
             width: MediaQuery.sizeOf(context).width * 1.0,
             height: MediaQuery.sizeOf(context).height * 1.0,
             decoration: BoxDecoration(),
-            child: Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
-              child: Column(
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                constraints: BoxConstraints(maxWidth: 800.0),
+                child: Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
+                  child: Column(
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -420,6 +424,8 @@ class _PartnerlistWidgetState extends State<PartnerlistWidget>
                                                                     0.0),
                                                         child: Text(
                                                           '${item.lastname} ${item.firstname}',
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow.ellipsis,
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyLarge
@@ -458,6 +464,8 @@ class _PartnerlistWidgetState extends State<PartnerlistWidget>
                                                                 item.partnershipTitle,
                                                                 'null',
                                                               ),
+                                                              maxLines: 1,
+                                                              overflow: TextOverflow.ellipsis,
                                                               style: FlutterFlowTheme
                                                                       .of(context)
                                                                   .bodyMedium
@@ -499,6 +507,8 @@ class _PartnerlistWidgetState extends State<PartnerlistWidget>
                                                       item.membershipStatus,
                                                       'Active',
                                                     ),
+                                                    maxLines: 1,
+                                                    overflow: TextOverflow.ellipsis,
                                                     style: FlutterFlowTheme.of(
                                                             context)
                                                         .bodyMedium
@@ -582,6 +592,8 @@ class _PartnerlistWidgetState extends State<PartnerlistWidget>
           ),
         ),
       ),
+          ),
+          ),
     );
   }
 }

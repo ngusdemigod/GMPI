@@ -10,8 +10,26 @@ import 'package:video_player/video_player.dart';
 
 import '/flutter_flow/flutter_flow_theme.dart';
 import 'flutter_flow_util.dart';
+import 'custom_snackbar.dart';
 
-const allowedFormats = {'image/png', 'image/jpeg', 'video/mp4', 'image/gif'};
+export 'custom_snackbar.dart';
+
+const allowedFormats = {
+  'image/png',
+  'image/jpeg',
+  'image/jpg',
+  'image/gif',
+  'image/webp',
+  'video/mp4',
+  'video/mpeg',
+  'video/quicktime',
+  'audio/mpeg',
+  'audio/mp3',
+  'audio/wav',
+  'application/pdf',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+};
 
 class SelectedFile {
   const SelectedFile({
@@ -356,28 +374,22 @@ void showUploadMessage(
   String message, {
   bool showLoading = false,
 }) {
-  ScaffoldMessenger.of(context)
-    ..hideCurrentSnackBar()
-    ..showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            if (showLoading)
-              Padding(
-                padding: EdgeInsetsDirectional.only(end: 10.0),
-                child: CircularProgressIndicator(
-                  valueColor: Theme.of(context).brightness == Brightness.dark
-                      ? AlwaysStoppedAnimation<Color>(
-                          FlutterFlowTheme.of(context).accent4)
-                      : null,
-                ),
-              ),
-            Text(message),
-          ],
-        ),
-        duration: showLoading ? Duration(days: 1) : Duration(seconds: 4),
-      ),
+  if (showLoading) {
+    FFSnackbar.show(
+      context,
+      message,
+      isLoading: true,
+      backgroundColor: FlutterFlowTheme.of(context).primaryText,
+      textColor: FlutterFlowTheme.of(context).primaryBackground,
     );
+  } else {
+    FFSnackbar.show(
+      context,
+      message,
+      backgroundColor: FlutterFlowTheme.of(context).secondary,
+      textColor: FlutterFlowTheme.of(context).primaryText,
+    );
+  }
 }
 
 String? _removeTrailingSlash(String? path) => path != null && path.endsWith('/')

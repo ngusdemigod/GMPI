@@ -537,6 +537,9 @@ class _ListofprojectsWidgetState extends State<ListofprojectsWidget>
                                                 child: Row(
                                                   mainAxisSize:
                                                       MainAxisSize.max,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment
+                                                          .stretch,
                                                   children: [
                                                     Expanded(
                                                       child: ClipRRect(
@@ -546,8 +549,9 @@ class _ListofprojectsWidgetState extends State<ListofprojectsWidget>
                                                         child: Image.network(
                                                           projectRow
                                                               .featuredImage!,
-                                                          width: 80.0,
-                                                          height: 80.0,
+                                                          width: double.infinity,
+                                                          height:
+                                                              double.infinity,
                                                           fit: BoxFit.cover,
                                                           alignment: Alignment(
                                                               0.0, 0.0),
@@ -556,6 +560,10 @@ class _ListofprojectsWidgetState extends State<ListofprojectsWidget>
                                                                   stackTrace) =>
                                                               Image.asset(
                                                             'assets/images/error_image.jpg',
+                                                            width:
+                                                                double.infinity,
+                                                            height:
+                                                                double.infinity,
                                                             fit: BoxFit.cover,
                                                           ),
                                                         ),

@@ -90,6 +90,8 @@ class _PartnerplansWidgetState extends State<PartnerplansWidget>
           elevation: 0.0,
         ),
         body: Container(
+          width: double.infinity,
+          height: double.infinity,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [Color(0x2B4B39EF), Color(0x060FD770)],
@@ -98,8 +100,12 @@ class _PartnerplansWidgetState extends State<PartnerplansWidget>
               end: AlignmentDirectional(-1.0, 1.0),
             ),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: Container(
+              constraints: BoxConstraints(maxWidth: 800.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(16.0, 32.0, 16.0, 0.0),
@@ -662,6 +668,8 @@ class _PartnerplansWidgetState extends State<PartnerplansWidget>
           ),
         ),
       ),
-    );
+    ),
+  ),
+);
   }
 }

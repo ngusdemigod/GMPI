@@ -1218,8 +1218,8 @@ class _UpdaterewardsWidgetState extends State<UpdaterewardsWidget>
                                                                           safeSetState(
                                                                               () {});
                                                                           // content type
-                                                                          _model.contenttype =
-                                                                              'application/pdf';
+
+                                                                            _model.contenttype = functions.getContentType(_model.uploadedLocalFile_uploadDataPdf1.originalFilename);
                                                                           safeSetState(
                                                                               () {});
                                                                           // progress bar
@@ -1235,9 +1235,7 @@ class _UpdaterewardsWidgetState extends State<UpdaterewardsWidget>
                                                                             filename:
                                                                                 _model.uploadedLocalFile_uploadDataPdf1.originalFilename,
                                                                             jwt:
-                                                                                currentJwtToken,
-                                                                            contenttype:
-                                                                                'application/pdf',
+                                                                                currentJwtToken, contenttype: _model.contenttype,
                                                                           );
 
                                                                           // Upload 2 bucket
@@ -1394,8 +1392,8 @@ class _UpdaterewardsWidgetState extends State<UpdaterewardsWidget>
                                                                           }
                                                                         }
 
-                                                                        if (!((_model.uploadedLocalFile_uploadDataPdf1 == null || (_model.uploadedLocalFile_uploadDataPdf1.bytes?.isEmpty ?? true)) ||
-                                                                            (_model.urls.where((e) => e.title == _model.uploadedLocalFile_uploadDataPdf1.originalFilename).toList().length.toString() ==
+                                                                        if (!((_model.uploadedLocalFile_uploadDataAudio2 == null || (_model.uploadedLocalFile_uploadDataAudio2.bytes?.isEmpty ?? true)) ||
+                                                                            (_model.urls.where((e) => e.title == _model.uploadedLocalFile_uploadDataAudio2.originalFilename).toList().length.toString() ==
                                                                                 '1'))) {
                                                                           // Reward type
                                                                           FFAppState().rewardtype =
@@ -1404,7 +1402,7 @@ class _UpdaterewardsWidgetState extends State<UpdaterewardsWidget>
                                                                               () {});
                                                                           // content type
                                                                           _model.contenttype =
-                                                                              'audio/mpeg';
+                                                                              functions.getContentType(_model.uploadedLocalFile_uploadDataAudio2.originalFilename);
                                                                           safeSetState(
                                                                               () {});
                                                                           // progress bar
@@ -1421,6 +1419,7 @@ class _UpdaterewardsWidgetState extends State<UpdaterewardsWidget>
                                                                                 _model.uploadedLocalFile_uploadDataAudio2.originalFilename,
                                                                             jwt:
                                                                                 currentJwtToken,
+                                                                            contenttype: _model.contenttype,
                                                                           );
 
                                                                           // Upload 2 bucket
@@ -1431,7 +1430,7 @@ class _UpdaterewardsWidgetState extends State<UpdaterewardsWidget>
                                                                               (_model.signAUDIO?.jsonBody ?? ''),
                                                                             ),
                                                                             file:
-                                                                                _model.uploadedLocalFile_uploadDataPdf1,
+                                                                                _model.uploadedLocalFile_uploadDataAudio2,
                                                                             jwt:
                                                                                 currentJwtToken,
                                                                           );
@@ -1442,11 +1441,11 @@ class _UpdaterewardsWidgetState extends State<UpdaterewardsWidget>
                                                                             title:
                                                                                 _model.uploadedLocalFile_uploadDataAudio2.originalFilename,
                                                                             link:
-                                                                                '${FFAppState().storagePuburl}${GetUploadURLCall.uploadurl(
+                                                                                '${FFAppState().storagePuburl}${GetUploadURLCall.objectkey(
                                                                               (_model.signAUDIO?.jsonBody ?? ''),
                                                                             )}',
                                                                             objectkey:
-                                                                                GetUploadURLCall.uploadurl(
+                                                                                GetUploadURLCall.objectkey(
                                                                               (_model.signAUDIO?.jsonBody ?? ''),
                                                                             ),
                                                                           ));
@@ -1779,8 +1778,11 @@ class _UpdaterewardsWidgetState extends State<UpdaterewardsWidget>
                                                             : true,
                                                         'church_id': FFAppState()
                                                             .partnershipUUID,
-                                                        'creator_name':
-                                                            currentUserUid,
+                                                        'attachment_path': _model
+                                                                .urls.isNotEmpty
+                                                            ? _model.urls.first
+                                                                .link
+                                                            : null,
                                                         'payload': functions
                                                             .mediaPayload2JSON(
                                                                 FFAppState()
@@ -1792,25 +1794,11 @@ class _UpdaterewardsWidgetState extends State<UpdaterewardsWidget>
                                                         widget!.id,
                                                       ),
                                                     );
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                        content: Text(
-                                                          'Uploaded',
-                                                          style: TextStyle(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primaryText,
-                                                          ),
-                                                        ),
-                                                        duration: Duration(
-                                                            milliseconds: 4000),
-                                                        backgroundColor:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .secondary,
-                                                      ),
+                                                    FFSnackbar.show(context, 'Uploaded',
+                                                      backgroundColor:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .secondary,
                                                     );
                                                     Navigator.pop(context);
 

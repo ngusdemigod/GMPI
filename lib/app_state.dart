@@ -430,7 +430,7 @@ class FFAppState extends ChangeNotifier {
 
   /// r2 public url
   String _storagePuburl =
-      'https://pub-10e4a4861cd7427b8959567c86b291e7.r2.dev/';
+      'https://storage.brightlightministry.org.ng/';
   String get storagePuburl => _storagePuburl;
   set storagePuburl(String value) {
     _storagePuburl = value;

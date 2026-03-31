@@ -133,6 +133,7 @@ class _TransactionListWidgetState extends State<TransactionListWidget> {
                         'Title Null',
                       ),
                       maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: FlutterFlowTheme.of(context).bodyLarge.override(
                             fontFamily:
                                 FlutterFlowTheme.of(context).bodyLargeFamily,
@@ -151,6 +152,8 @@ class _TransactionListWidgetState extends State<TransactionListWidget> {
                           widget!.user,
                           'User null',
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style:
                             FlutterFlowTheme.of(context).labelMedium.override(
                                   fontFamily: FlutterFlowTheme.of(context)
@@ -168,6 +171,8 @@ class _TransactionListWidgetState extends State<TransactionListWidget> {
                         widget!.partnership,
                         'Not a partner',
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: FlutterFlowTheme.of(context).labelMedium.override(
                             fontFamily:
                                 FlutterFlowTheme.of(context).labelMediumFamily,

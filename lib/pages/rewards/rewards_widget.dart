@@ -90,6 +90,8 @@ class _RewardsWidgetState extends State<RewardsWidget>
           elevation: 0.0,
         ),
         body: Container(
+          width: double.infinity,
+          height: double.infinity,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [Color(0x2B4B39EF), Color(0x060FD770)],
@@ -98,8 +100,12 @@ class _RewardsWidgetState extends State<RewardsWidget>
               end: AlignmentDirectional(-1.0, 1.0),
             ),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: Container(
+              constraints: BoxConstraints(maxWidth: 800.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(16.0, 32.0, 16.0, 0.0),
@@ -334,7 +340,7 @@ class _RewardsWidgetState extends State<RewardsWidget>
                                   rewards[columnIndex];
                               return Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 1.0),
+                                    16.0, 0.0, 16.0, 1.0),
                                 child: InkWell(
                                   splashColor: Colors.transparent,
                                   focusColor: Colors.transparent,
@@ -493,6 +499,7 @@ class _RewardsWidgetState extends State<RewardsWidget>
                                                       'null',
                                                     ),
                                                     maxLines: 2,
+                                                    overflow: TextOverflow.ellipsis,
                                                     minFontSize: 14.0,
                                                     style: FlutterFlowTheme.of(
                                                             context)
@@ -507,6 +514,7 @@ class _RewardsWidgetState extends State<RewardsWidget>
                                                               .primaryText,
                                                           fontSize: 14.0,
                                                           letterSpacing: 0.0,
+
                                                           useGoogleFonts:
                                                               !FlutterFlowTheme
                                                                       .of(context)
@@ -690,6 +698,8 @@ class _RewardsWidgetState extends State<RewardsWidget>
                                                             "MMMEd",
                                                             columnRewardsWithStatsRow
                                                                 .createdAt),
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow.ellipsis,
                                                         style:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -789,6 +799,8 @@ class _RewardsWidgetState extends State<RewardsWidget>
           ),
         ),
       ),
-    );
+    ),
+  ),
+);
   }
 }
