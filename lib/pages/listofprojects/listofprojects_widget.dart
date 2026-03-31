@@ -160,10 +160,14 @@ class _ListofprojectsWidgetState extends State<ListofprojectsWidget>
                               ? columnChurchMembersRowList.first
                               : null;
 
-                      return Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
+                      return Align(
+                        alignment: Alignment.topCenter,
+                        child: Container(
+                          constraints: BoxConstraints(maxWidth: 800.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
                           Column(
                             mainAxisSize: MainAxisSize.max,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -507,7 +511,7 @@ class _ListofprojectsWidgetState extends State<ListofprojectsWidget>
                                               );
                                             },
                                             child: Container(
-                                              width: 100.0,
+                                              width: double.infinity,
                                               height: 142.0,
                                               decoration: BoxDecoration(
                                                 color:
@@ -572,7 +576,7 @@ class _ListofprojectsWidgetState extends State<ListofprojectsWidget>
                                                               MainAxisSize.max,
                                                           mainAxisAlignment:
                                                               MainAxisAlignment
-                                                                  .center,
+                                                                  .start,
                                                           crossAxisAlignment:
                                                               CrossAxisAlignment
                                                                   .start,
@@ -693,6 +697,7 @@ class _ListofprojectsWidgetState extends State<ListofprojectsWidget>
                                                             Text(
                                                               projectRow.title,
                                                               maxLines: 1,
+                                                              overflow: TextOverflow.ellipsis,
                                                               style: FlutterFlowTheme
                                                                       .of(context)
                                                                   .bodyLarge
@@ -728,6 +733,7 @@ class _ListofprojectsWidgetState extends State<ListofprojectsWidget>
                                                                   'DEC',
                                                                 ),
                                                                 maxLines: 2,
+                                                                overflow: TextOverflow.ellipsis,
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyLarge
@@ -764,6 +770,7 @@ class _ListofprojectsWidgetState extends State<ListofprojectsWidget>
                                                               children: [
                                                                 Text(
                                                                   'Target: ${functions.safeCurrency(projectRow.targetAmount!, projectRow.currency!)}',
+                                                                  overflow: TextOverflow.ellipsis,
                                                                   style: FlutterFlowTheme.of(
                                                                           context)
                                                                       .labelMedium
@@ -804,6 +811,8 @@ class _ListofprojectsWidgetState extends State<ListofprojectsWidget>
                             ),
                           ),
                         ].addToStart(SizedBox(height: 32.0)),
+                      ),
+                      ),
                       );
                     },
                   ),

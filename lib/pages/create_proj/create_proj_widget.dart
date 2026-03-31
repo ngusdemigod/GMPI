@@ -7,6 +7,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/upload_data.dart';
+import 'package:mime_type/mime_type.dart';
 import 'dart:math';
 import 'dart:ui';
 import '/flutter_flow/custom_functions.dart' as functions;
@@ -1024,29 +1025,89 @@ class _CreateProjWidgetState extends State<CreateProjWidget>
                                         0.0, 16.0, 4.0, 0.0),
                                     child: FFButtonWidget(
                                       onPressed: () async {
+                                        final selectedFile =
+                                            _model.uploadedLocalFile_uploadDataImg;
+                                        final originalFilename =
+                                            selectedFile.originalFilename;
+
+                                        if (originalFilename.isEmpty) {
+                                          showUploadMessage(
+                                            context,
+                                            'Please add a photo first',
+                                          );
+                                          return;
+                                        }
+
+                                        final mimeType =
+                                            mime(originalFilename) ??
+                                                'image/jpeg';
+
+                                        showUploadMessage(
+                                          context,
+                                          'Uploading image...',
+                                          showLoading: true,
+                                        );
+
                                         // sign upload get url
                                         _model.imagepublish =
                                             await GetUploadURLCall.call(
                                           churchId:
                                               FFAppState().partnershipUUID,
-                                          filename: _model
-                                              .uploadedLocalFile_uploadDataImg
-                                              .originalFilename,
+                                          filename: originalFilename,
                                           jwt: currentJwtToken,
-                                          contenttype: 'image/jpg',
+                                          contenttype: mimeType,
                                         );
 
-                                        // Upload 2 bucket
+                                        final uploadUrl =
+                                            GetUploadURLCall.uploadurl(
+                                          _model.imagepublish?.jsonBody ?? '',
+                                        );
+                                        final objectKey =
+                                            GetUploadURLCall.objectkey(
+                                          _model.imagepublish?.jsonBody ?? '',
+                                        );
+
+                                        if (!(_model.imagepublish?.succeeded ??
+                                                false) ||
+                                            uploadUrl == null ||
+                                            objectKey == null) {
+                                          showUploadMessage(
+                                            context,
+                                            'Failed to get upload URL',
+                                          );
+                                          return;
+                                        }
+
+                                        // Upload to R2 bucket
                                         _model.upload2bucketpublish =
                                             await UploadToBucketCall.call(
-                                          url: GetUploadURLCall.uploadurl(
-                                            (_model.imagepublish?.jsonBody ??
-                                                ''),
-                                          ),
-                                          file: _model
-                                              .uploadedLocalFile_uploadDataImg,
+                                          url: uploadUrl,
+                                          file: selectedFile,
                                           jwt: currentJwtToken,
                                         );
+
+                                        if (!(_model.upload2bucketpublish
+                                                ?.succeeded ??
+                                            false)) {
+                                          final statusCode =
+                                              _model.upload2bucketpublish
+                                                  ?.statusCode;
+                                          final bodyText =
+                                              _model.upload2bucketpublish
+                                                  ?.bodyText;
+                                          final trimmed = (bodyText == null)
+                                              ? ''
+                                              : (bodyText.length > 180
+                                                  ? '${bodyText.substring(0, 180)}...'
+                                                  : bodyText);
+                                          showUploadMessage(
+                                            context,
+                                            'Image upload failed (${statusCode ?? 'unknown'}). $trimmed',
+                                          );
+                                          return;
+                                        }
+
+                                        showUploadMessage(context, 'Image uploaded!');
 
                                         await ProjectsTable().insert({
                                           'title': _model
@@ -1065,10 +1126,7 @@ class _CreateProjWidgetState extends State<CreateProjWidget>
                                           'created_at': supaSerialize<DateTime>(
                                               getCurrentTimestamp),
                                           'featured image':
-                                              '${FFAppState().storagePuburl}${GetUploadURLCall.objectkey(
-                                            (_model.imagepublish?.jsonBody ??
-                                                ''),
-                                          )}',
+                                              '${FFAppState().storagePuburl}$objectKey',
                                           'created_by': currentUserUid,
                                           'currency': FFAppState().currency,
                                         });
@@ -1135,28 +1193,82 @@ class _CreateProjWidgetState extends State<CreateProjWidget>
                                         0.0, 16.0, 4.0, 0.0),
                                     child: FFButtonWidget(
                                       onPressed: () async {
-                                        // sign upload get url
-                                        _model.image =
-                                            await GetUploadURLCall.call(
-                                          churchId:
-                                              FFAppState().partnershipUUID,
-                                          filename: _model
-                                              .uploadedLocalFile_uploadDataImg
-                                              .originalFilename,
-                                          jwt: currentJwtToken,
-                                          contenttype: 'image/jpg',
+                                        final selectedFile =
+                                            _model.uploadedLocalFile_uploadDataImg;
+                                        final originalFilename =
+                                            selectedFile.originalFilename;
+
+                                        if (originalFilename.isEmpty) {
+                                          showUploadMessage(
+                                            context,
+                                            'Please add a photo first',
+                                          );
+                                          return;
+                                        }
+
+                                        final mimeType =
+                                            mime(originalFilename) ??
+                                                'image/jpeg';
+
+                                        showUploadMessage(
+                                          context,
+                                          'Uploading image...',
+                                          showLoading: true,
                                         );
 
-                                        // Upload 2 bucket
+                                        // sign upload get url
+                                        _model.image = await GetUploadURLCall.call(
+                                          churchId:
+                                              FFAppState().partnershipUUID,
+                                          filename: originalFilename,
+                                          jwt: currentJwtToken,
+                                          contenttype: mimeType,
+                                        );
+
+                                        final uploadUrl = GetUploadURLCall.uploadurl(
+                                          _model.image?.jsonBody ?? '',
+                                        );
+                                        final objectKey = GetUploadURLCall.objectkey(
+                                          _model.image?.jsonBody ?? '',
+                                        );
+
+                                        if (!(_model.image?.succeeded ?? false) ||
+                                            uploadUrl == null ||
+                                            objectKey == null) {
+                                          showUploadMessage(
+                                            context,
+                                            'Failed to get upload URL',
+                                          );
+                                          return;
+                                        }
+
+                                        // Upload to R2 bucket
                                         _model.upload2bucket =
                                             await UploadToBucketCall.call(
-                                          url: GetUploadURLCall.uploadurl(
-                                            (_model.image?.jsonBody ?? ''),
-                                          ),
-                                          file: _model
-                                              .uploadedLocalFile_uploadDataImg,
+                                          url: uploadUrl,
+                                          file: selectedFile,
                                           jwt: currentJwtToken,
                                         );
+
+                                        if (!(_model.upload2bucket?.succeeded ??
+                                            false)) {
+                                          final statusCode =
+                                              _model.upload2bucket?.statusCode;
+                                          final bodyText =
+                                              _model.upload2bucket?.bodyText;
+                                          final trimmed = (bodyText == null)
+                                              ? ''
+                                              : (bodyText.length > 180
+                                                  ? '${bodyText.substring(0, 180)}...'
+                                                  : bodyText);
+                                          showUploadMessage(
+                                            context,
+                                            'Image upload failed (${statusCode ?? 'unknown'}). $trimmed',
+                                          );
+                                          return;
+                                        }
+
+                                        showUploadMessage(context, 'Image uploaded!');
 
                                         await ProjectsTable().insert({
                                           'title': _model
@@ -1175,9 +1287,7 @@ class _CreateProjWidgetState extends State<CreateProjWidget>
                                           'created_at': supaSerialize<DateTime>(
                                               getCurrentTimestamp),
                                           'featured image':
-                                              '${FFAppState().storagePuburl}${GetUploadURLCall.objectkey(
-                                            (_model.image?.jsonBody ?? ''),
-                                          )}',
+                                              '${FFAppState().storagePuburl}$objectKey',
                                           'created_by': currentUserUid,
                                           'currency': FFAppState().currency,
                                         });
