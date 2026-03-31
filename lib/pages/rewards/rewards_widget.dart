@@ -728,8 +728,45 @@ class _RewardsWidgetState extends State<RewardsWidget>
                                                         SizedBox(width: 4.0)),
                                                   ),
                                                 ].divide(SizedBox(height: 4.0)),
-                                              ),
                                             ),
+                                          ),
+                                          IconButton(
+                                            icon: Icon(
+                                              Icons.delete_outline_rounded,
+                                              color: FlutterFlowTheme.of(context).error,
+                                              size: 24.0,
+                                            ),
+                                            onPressed: () async {
+                                              var confirmDialogResponse = await showDialog<bool>(
+                                                context: context,
+                                                builder: (alertDialogContext) {
+                                                  return AlertDialog(
+                                                    title: Text('Delete Reward'),
+                                                    content: Text('Are you sure you want to delete this reward?'),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () => Navigator.pop(alertDialogContext, false),
+                                                        child: Text('Cancel'),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: () => Navigator.pop(alertDialogContext, true),
+                                                        child: Text('Confirm', style: TextStyle(color: FlutterFlowTheme.of(context).error)),
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              ) ?? false;
+                                              if (confirmDialogResponse) {
+                                                await RewardsTable().delete(
+                                                  matchingRows: (rows) => rows.eq(
+                                                    'id',
+                                                    columnRewardsWithStatsRow.id,
+                                                  ),
+                                                );
+                                                await _model.fetchNextPage(isRefresh: true);
+                                                safeSetState(() {});
+                                              }
+                                            },
                                           ),
                                         ].divide(SizedBox(width: 8.0)),
                                       ),

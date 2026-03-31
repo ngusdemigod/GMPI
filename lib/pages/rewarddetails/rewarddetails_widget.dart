@@ -176,8 +176,8 @@ class _RewarddetailsWidgetState extends State<RewarddetailsWidget> {
                               child: Padding(
                                 padding: MediaQuery.viewInsetsOf(context),
                                 child: UpdaterewardsWidget(
-                                  id: columnRewardsRow!.id,
-                                  urls: columnRewardsRow!.payload!,
+                                  id: columnRewardsRow?.id,
+                                  urls: columnRewardsRow?.payload,
                                 ),
                               ),
                             );

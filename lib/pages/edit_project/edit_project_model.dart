@@ -27,6 +27,7 @@ class EditProjectModel extends FlutterFlowModel<EditProjectWidget> {
   DateTime? start;
 
   DateTime? end;
+  bool isImageDeleted = false;
 
   ///  State fields for stateful widgets in this component.
 

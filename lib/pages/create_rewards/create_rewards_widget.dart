@@ -1,4 +1,4 @@
-﻿import '/auth/supabase_auth/auth_util.dart';
+import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/schema/structs/index.dart';
 import '/backend/supabase/supabase.dart';
@@ -403,28 +403,35 @@ class _CreateRewardsWidgetState extends State<CreateRewardsWidget>
                                         }
                                       }
                                     },
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      child: Image.memory(
-                                        _model.uploadedLocalFile_uploadDataImage
-                                                .bytes ??
-                                            Uint8List.fromList([]),
-                                        width:
-                                            MediaQuery.sizeOf(context).width *
+                                    child: Stack(
+                                      alignment: AlignmentDirectional(1.0, -1.0),
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                          child: Image.memory(
+                                            _model.uploadedLocalFile_uploadDataImage
+                                                    .bytes ??
+                                                Uint8List.fromList([]),
+                                            width: MediaQuery.sizeOf(context)
+                                                    .width *
                                                 1.0,
-                                        height: 200.0,
-                                        fit: BoxFit.cover,
-                                        errorBuilder:
-                                            (context, error, stackTrace) =>
-                                                Image.asset(
-                                          'assets/images/error_image.jpg',
-                                          width:
-                                              MediaQuery.sizeOf(context).width *
+                                            height: 200.0,
+                                            fit: BoxFit.cover,
+                                            errorBuilder:
+                                                (context, error, stackTrace) =>
+                                                    Image.asset(
+                                              'assets/images/error_image.jpg',
+                                              width: MediaQuery.sizeOf(context)
+                                                      .width *
                                                   1.0,
-                                          height: 200.0,
-                                          fit: BoxFit.cover,
+                                              height: 200.0,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
                                         ),
-                                      ),
+
+                                      ],
                                     ),
                                   ),
                                   Padding(
@@ -928,7 +935,7 @@ class _CreateRewardsWidgetState extends State<CreateRewardsWidget>
                                                                                 onTap: () async {
                                                                                   _model.apiResultps1Copy = await DeleteFileInBucketCall.call(
                                                                                     jwt: currentJwtToken,
-                                                                                    objectKey: uploadedfilePDFItem.objectkey,
+                                                                                    url: uploadedfilePDFItem.link,
                                                                                     churchId: FFAppState().partnershipUUID,
                                                                                   );
 
@@ -1019,7 +1026,7 @@ class _CreateRewardsWidgetState extends State<CreateRewardsWidget>
                                                                                 onTap: () async {
                                                                                   _model.apiResultps1CopyCopy = await DeleteFileInBucketCall.call(
                                                                                     jwt: currentJwtToken,
-                                                                                    objectKey: uploadedfilePDFItem.objectkey,
+                                                                                    url: uploadedfilePDFItem.link,
                                                                                     churchId: FFAppState().partnershipUUID,
                                                                                   );
 
@@ -1698,8 +1705,8 @@ class _CreateRewardsWidgetState extends State<CreateRewardsWidget>
                                                                               .call(
                                                                         jwt:
                                                                             currentJwtToken,
-                                                                        objectKey:
-                                                                            currentLoop1Item.objectkey,
+                                                                        url:
+                                                                            currentLoop1Item.link,
                                                                         churchId:
                                                                             FFAppState().partnershipUUID,
                                                                       );

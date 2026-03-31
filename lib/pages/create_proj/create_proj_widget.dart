@@ -408,33 +408,46 @@ class _CreateProjWidgetState extends State<CreateProjWidget>
                                                     0.0, 0.0),
                                                 child: Padding(
                                                   padding: EdgeInsets.all(8.0),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10.0),
-                                                    child: Image.memory(
-                                                      _model.uploadedLocalFile_uploadDataImg
-                                                              .bytes ??
-                                                          Uint8List.fromList(
-                                                              []),
-                                                      width: double.infinity,
-                                                      height: double.infinity,
-                                                      fit: BoxFit.cover,
-                                                      alignment:
-                                                          Alignment(0.0, 0.0),
-                                                      errorBuilder: (context,
-                                                              error,
-                                                              stackTrace) =>
-                                                          Image.asset(
-                                                        'assets/images/error_image.jpg',
-                                                        width: double.infinity,
-                                                        height: double.infinity,
-                                                        fit: BoxFit.cover,
-                                                        alignment:
-                                                            Alignment(0.0, 0.0),
-                                                      ),
-                                                    ),
-                                                  ),
+                                                   child: Stack(
+                                                     alignment:
+                                                         AlignmentDirectional(
+                                                             1.0, -1.0),
+                                                     children: [
+                                                       ClipRRect(
+                                                         borderRadius:
+                                                             BorderRadius.circular(
+                                                                 10.0),
+                                                         child: Image.memory(
+                                                           _model.uploadedLocalFile_uploadDataImg
+                                                                   .bytes ??
+                                                               Uint8List.fromList(
+                                                                   []),
+                                                           width:
+                                                               double.infinity,
+                                                           height:
+                                                               double.infinity,
+                                                           fit: BoxFit.cover,
+                                                           alignment: Alignment(
+                                                               0.0, 0.0),
+                                                           errorBuilder: (context,
+                                                                   error,
+                                                                   stackTrace) =>
+                                                               Image.asset(
+                                                             'assets/images/error_image.jpg',
+                                                             width:
+                                                                 double.infinity,
+                                                             height:
+                                                                 double.infinity,
+                                                             fit: BoxFit.cover,
+                                                             alignment:
+                                                                 Alignment(
+                                                                     0.0, 0.0),
+                                                           ),
+                                                         ),
+                                                       ),
+
+                                                     ],
+                                                   ),
                                                 ),
                                               ),
                                             ],

@@ -519,12 +519,12 @@ class UploadToBucketCall {
 class DeleteFileInBucketCall {
   static Future<ApiCallResponse> call({
     String? jwt = '',
-    String? objectKey = '',
+    String? url = '',
     String? churchId = '',
   }) async {
     final ffApiRequestBody = '''
 {
-  "objectKey": "${escapeStringForJson(objectKey)}",
+  "url": "${escapeStringForJson(url)}",
   "churchId": "${escapeStringForJson(churchId)}"
 }''';
     return ApiManager.instance.makeApiCall(

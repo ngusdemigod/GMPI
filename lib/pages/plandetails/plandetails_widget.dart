@@ -96,68 +96,77 @@ class _PlandetailsWidgetState extends State<PlandetailsWidget> {
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
-      body: FutureBuilder<List<PartnershipPLANSRow>>(
-        future: PartnershipPLANSTable().querySingleRow(
-          queryFn: (q) => q.eqOrNull(
-            'id',
-            widget!.id,
-          ),
-        ),
-        builder: (context, snapshot) {
-          // Customize what your widget looks like when it's loading.
-          if (!snapshot.hasData) {
-            return Center(
-              child: SizedBox(
-                width: 24.0,
-                height: 24.0,
-                child: SpinKitFadingCube(
-                  color: FlutterFlowTheme.of(context).primary,
-                  size: 24.0,
+      body: SafeArea(
+        top: true,
+        child: FutureBuilder<List<PartnershipPLANSRow>>(
+          future: PartnershipPLANSTable().querySingleRow(
+            queryFn: (q) => q.eqOrNull(
+              'id',
+              widget!.id,
+            ),
+          ).then((value) {
+            if (value.isNotEmpty) {
+              FFAppState().planCache[widget.id!] = value;
+            }
+            return value;
+          }),
+          initialData: FFAppState().planCache[widget.id],
+          builder: (context, snapshot) {
+            // Customize what your widget looks like when it's loading.
+            if (!snapshot.hasData) {
+              return Center(
+                child: SizedBox(
+                  width: 24.0,
+                  height: 24.0,
+                  child: SpinKitFadingCube(
+                    color: FlutterFlowTheme.of(context).primary,
+                    size: 24.0,
+                  ),
                 ),
-              ),
-            );
-          }
-          List<PartnershipPLANSRow> columnPartnershipPLANSRowList =
-              snapshot.data!;
+              );
+            }
+            List<PartnershipPLANSRow> columnPartnershipPLANSRowList =
+                snapshot.data!;
 
-          final columnPartnershipPLANSRow =
-              columnPartnershipPLANSRowList.isNotEmpty
-                  ? columnPartnershipPLANSRowList.first
-                  : null;
+            final columnPartnershipPLANSRow =
+                columnPartnershipPLANSRowList.isNotEmpty
+                    ? columnPartnershipPLANSRowList.first
+                    : null;
 
-          return Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 0.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    InkWell(
-                      splashColor: Colors.transparent,
-                      focusColor: Colors.transparent,
-                      hoverColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      onTap: () async {
-                        context.safePop();
-                      },
-                      child: Icon(
-                        Icons.chevron_left_rounded,
-                        color: FlutterFlowTheme.of(context).primaryText,
-                        size: 32.0,
+            return Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Padding(
+                  padding:
+                      EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 0.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      InkWell(
+                        splashColor: Colors.transparent,
+                        focusColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        onTap: () async {
+                          context.safePop();
+                        },
+                        child: Icon(
+                          Icons.chevron_left_rounded,
+                          color: FlutterFlowTheme.of(context).primaryText,
+                          size: 32.0,
+                        ),
                       ),
-                    ),
-                    Text(
-                      'Details',
-                      style: FlutterFlowTheme.of(context).titleSmall.override(
-                            fontFamily:
-                                FlutterFlowTheme.of(context).titleSmallFamily,
-                            letterSpacing: 0.0,
-                            useGoogleFonts: !FlutterFlowTheme.of(context)
-                                .titleSmallIsCustom,
-                          ),
-                    ),
+                      Text(
+                        'Plan Details',
+                        style: FlutterFlowTheme.of(context).titleSmall.override(
+                              fontFamily:
+                                  FlutterFlowTheme.of(context).titleSmallFamily,
+                              letterSpacing: 0.0,
+                              useGoogleFonts: !FlutterFlowTheme.of(context)
+                                  .titleSmallIsCustom,
+                            ),
+                      ),
                     InkWell(
                       splashColor: Colors.transparent,
                       focusColor: Colors.transparent,
@@ -194,15 +203,15 @@ class _PlandetailsWidgetState extends State<PlandetailsWidget> {
                 ),
               ),
               Expanded(
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            16.0, 0.0, 16.0, 0.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding:
+                            EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -224,7 +233,7 @@ class _PlandetailsWidgetState extends State<PlandetailsWidget> {
                                         fontFamily: FlutterFlowTheme.of(context)
                                             .headlineMediumFamily,
                                         letterSpacing: 0.0,
-                                        lineHeight: 1.0,
+                                        lineHeight: 1.2,
                                         useGoogleFonts:
                                             !FlutterFlowTheme.of(context)
                                                 .headlineMediumIsCustom,
@@ -269,10 +278,7 @@ class _PlandetailsWidgetState extends State<PlandetailsWidget> {
                                 ),
                               ].divide(SizedBox(height: 8.0)),
                             ),
-                            Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 16.0, 0.0, 0.0),
-                              child: Container(
+                            Container(
                                 decoration: BoxDecoration(
                                   color: Color(0xFF02311A),
                                   image: DecorationImage(
@@ -409,22 +415,16 @@ class _PlandetailsWidgetState extends State<PlandetailsWidget> {
                                   ),
                                 ),
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 16.0, 0.0, 0.0),
-                              child: SingleChildScrollView(
+                            SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Expanded(
-                                      child: FutureBuilder<
-                                          List<
-                                              MemberDetailsPlusMembershipSummaryRow>>(
-                                        future:
-                                            MemberDetailsPlusMembershipSummaryTable()
+                                    FutureBuilder<
+                                        List<
+                                            MemberDetailsPlusMembershipSummaryRow>>(
+                                      future: MemberDetailsPlusMembershipSummaryTable()
                                                 .queryRows(
                                           queryFn: (q) => q.eqOrNull(
                                             'partnership_plan',
@@ -432,7 +432,6 @@ class _PlandetailsWidgetState extends State<PlandetailsWidget> {
                                           ),
                                         ),
                                         builder: (context, snapshot) {
-                                          // Customize what your widget looks like when it's loading.
                                           if (!snapshot.hasData) {
                                             return Center(
                                               child: SizedBox(
@@ -447,108 +446,110 @@ class _PlandetailsWidgetState extends State<PlandetailsWidget> {
                                               ),
                                             );
                                           }
-                                          List<MemberDetailsPlusMembershipSummaryRow>
-                                              choiceChipsMemberDetailsPlusMembershipSummaryRowList =
+                                          final choiceChipsMemberDetailsPlusMembershipSummaryRowList =
                                               snapshot.data!;
 
+                                          if (choiceChipsMemberDetailsPlusMembershipSummaryRowList
+                                              .isEmpty) {
+                                            return Container();
+                                          }
                                           return FlutterFlowChoiceChips(
-                                            options:
-                                                choiceChipsMemberDetailsPlusMembershipSummaryRowList
-                                                    .unique((e) =>
-                                                        e.membershipStatus!)
-                                                    .map((e) =>
-                                                        e.membershipStatus)
-                                                    .withoutNulls
-                                                    .toList()
-                                                    .map((label) =>
-                                                        ChipData(label))
-                                                    .toList(),
-                                            onChanged: (val) => safeSetState(
-                                                () => _model.choiceChipsValue =
-                                                    val?.firstOrNull),
-                                            selectedChipStyle: ChipStyle(
-                                              backgroundColor:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primary,
-                                              textStyle: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    fontFamily:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMediumFamily,
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primaryText,
-                                                    letterSpacing: 0.0,
-                                                    useGoogleFonts:
-                                                        !FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMediumIsCustom,
-                                                  ),
-                                              iconColor: Colors.black,
-                                              iconSize: 16.0,
-                                              elevation: 0.0,
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0),
-                                            ),
-                                            unselectedChipStyle: ChipStyle(
-                                              backgroundColor:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primaryBackground,
-                                              textStyle: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    fontFamily:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMediumFamily,
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
+                                              options:
+                                                  choiceChipsMemberDetailsPlusMembershipSummaryRowList
+                                                      .unique((e) =>
+                                                          e.membershipStatus!)
+                                                      .map((e) =>
+                                                          e.membershipStatus)
+                                                      .withoutNulls
+                                                      .toList()
+                                                      .map((label) =>
+                                                          ChipData(label))
+                                                      .toList(),
+                                              onChanged: (val) => safeSetState(
+                                                  () => _model.choiceChipsValue =
+                                                      val?.firstOrNull),
+                                              selectedChipStyle: ChipStyle(
+                                                backgroundColor:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primary,
+                                                textStyle: FlutterFlowTheme.of(
+                                                        context)
+                                                    .bodyMedium
+                                                    .override(
+                                                      fontFamily:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMediumFamily,
+                                                      color: FlutterFlowTheme.of(
+                                                              context)
+                                                          .primaryText,
+                                                      letterSpacing: 0.0,
+                                                      useGoogleFonts:
+                                                          !FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMediumIsCustom,
+                                                    ),
+                                                iconColor: Colors.black,
+                                                iconSize: 16.0,
+                                                elevation: 0.0,
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                              ),
+                                              unselectedChipStyle: ChipStyle(
+                                                backgroundColor:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primaryBackground,
+                                                textStyle: FlutterFlowTheme.of(
+                                                        context)
+                                                    .bodyMedium
+                                                    .override(
+                                                      fontFamily:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMediumFamily,
+                                                      color: FlutterFlowTheme.of(
+                                                              context)
+                                                          .secondaryText,
+                                                      letterSpacing: 0.0,
+                                                      useGoogleFonts:
+                                                          !FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMediumIsCustom,
+                                                    ),
+                                                iconColor:
+                                                    FlutterFlowTheme.of(context)
                                                         .secondaryText,
-                                                    letterSpacing: 0.0,
-                                                    useGoogleFonts:
-                                                        !FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMediumIsCustom,
-                                                  ),
-                                              iconColor:
-                                                  FlutterFlowTheme.of(context)
-                                                      .secondaryText,
-                                              iconSize: 16.0,
-                                              elevation: 0.0,
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0),
-                                            ),
-                                            chipSpacing: 8.0,
-                                            rowSpacing: 8.0,
-                                            multiselect: false,
-                                            initialized:
-                                                _model.choiceChipsValue != null,
-                                            alignment: WrapAlignment.start,
-                                            controller: _model
-                                                    .choiceChipsValueController ??=
-                                                FormFieldController<
-                                                    List<String>>(
-                                              [
-                                                choiceChipsMemberDetailsPlusMembershipSummaryRowList
-                                                    .unique((e) =>
-                                                        e.membershipStatus!)
-                                                    .firstOrNull!
-                                                    .membershipStatus!
-                                              ],
-                                            ),
-                                            wrapped: true,
-                                          );
-                                        },
-                                      ),
+                                                iconSize: 16.0,
+                                                elevation: 0.0,
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                              ),
+                                              chipSpacing: 8.0,
+                                              rowSpacing: 8.0,
+                                              multiselect: false,
+                                              initialized:
+                                                  _model.choiceChipsValue != null,
+                                              alignment: WrapAlignment.start,
+                                              controller: _model
+                                                      .choiceChipsValueController ??=
+                                                  FormFieldController<
+                                                      List<String>>(
+                                                [
+                                                  choiceChipsMemberDetailsPlusMembershipSummaryRowList
+                                                          .unique((e) =>
+                                                              e.membershipStatus!)
+                                                          .firstOrNull
+                                                          ?.membershipStatus ??
+                                                      ''
+                                                ],
+                                              ),
+                                              wrapped: true,
+                                            );
+                                      },
                                     ),
                                   ].divide(SizedBox(width: 4.0)),
                                 ),
                               ),
-                            ),
                             FutureBuilder<
                                 List<MemberDetailsPlusMembershipSummaryRow>>(
                               future: MemberDetailsPlusMembershipSummaryTable()
@@ -586,10 +587,11 @@ class _PlandetailsWidgetState extends State<PlandetailsWidget> {
                                   return EmptyWidget();
                                 }
 
-                                return ListView.separated(
-                                  padding: EdgeInsets.zero,
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.vertical,
+                                  return ListView.separated(
+                                    padding: EdgeInsets.zero,
+                                    shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    scrollDirection: Axis.vertical,
                                   itemCount:
                                       listViewMemberDetailsPlusMembershipSummaryRowList
                                           .length,
@@ -706,19 +708,18 @@ class _PlandetailsWidgetState extends State<PlandetailsWidget> {
                                 );
                               },
                             ),
-                          ]
-                              .divide(SizedBox(height: 8.0))
-                              .addToStart(SizedBox(height: 32.0)),
+                                ].divide(SizedBox(height: 16.0)),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                  ].addToEnd(SizedBox(height: 32.0)),
-                ),
-              ),
-            ],
-          );
-        },
-      ),
-    );
+                  ],
+                );
+            },
+          ),
+        ),
+      );
   }
 }

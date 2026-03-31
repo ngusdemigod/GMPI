@@ -399,7 +399,8 @@ class _PartnerplansWidgetState extends State<PartnerplansWidget>
                                                             children: [
                                                               TextSpan(
                                                                 text: columnRow
-                                                                    .description!,
+                                                                        .description ??
+                                                                    '',
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyMedium

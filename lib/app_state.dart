@@ -446,6 +446,12 @@ class FFAppState extends ChangeNotifier {
   void updateTempPayloadStruct(Function(MediapayloadStruct) updateFn) {
     updateFn(_tempPayload);
   }
+
+  Map<String, List<PartnershipPLANSRow>> _planCache = {};
+  Map<String, List<PartnershipPLANSRow>> get planCache => _planCache;
+  set planCache(Map<String, List<PartnershipPLANSRow>> value) {
+    _planCache = value;
+  }
 }
 
 void _safeInit(Function() initializeField) {

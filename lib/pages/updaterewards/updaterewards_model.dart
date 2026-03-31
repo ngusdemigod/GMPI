@@ -93,6 +93,8 @@ class UpdaterewardsModel extends FlutterFlowModel<UpdaterewardsWidget> {
   void updateQueueAtIndex(int index, Function(LinksStruct) updateFn) =>
       queue[index] = updateFn(queue[index]);
 
+  bool isImageDeleted = false;
+
   ///  State fields for stateful widgets in this component.
 
   final formKey = GlobalKey<FormState>();

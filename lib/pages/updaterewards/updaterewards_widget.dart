@@ -65,14 +65,9 @@ class _UpdaterewardsWidgetState extends State<UpdaterewardsWidget>
 
     // On component load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      _model.urls = MediapayloadStruct.maybeFromMap(widget!.urls!)!
-          .links
-          .toList()
-          .cast<LinksStruct>();
-      _model.videourls = MediapayloadStruct.maybeFromMap(widget!.urls!)!
-          .yTlinks
-          .toList()
-          .cast<VideolinksStruct>();
+      final payload = MediapayloadStruct.maybeFromMap(widget.urls);
+      _model.urls = payload?.links.toList().cast<LinksStruct>() ?? [];
+      _model.videourls = payload?.yTlinks.toList().cast<VideolinksStruct>() ?? [];
       safeSetState(() {});
     });
 
@@ -89,12 +84,11 @@ class _UpdaterewardsWidgetState extends State<UpdaterewardsWidget>
 
     _model.descriptionFocusNode ??= FocusNode();
 
+    final ytLinks = MediapayloadStruct.maybeFromMap(widget.urls)?.yTlinks;
+    final initialLinkText = ytLinks != null && ytLinks.isNotEmpty ? ytLinks.first.links : '';
+    
     _model.linkTextController ??= TextEditingController(
-        text: functions.videopath2string(
-            MediapayloadStruct.maybeFromMap(widget!.urls!)!
-                .yTlinks
-                .firstOrNull!
-                .links));
+        text: initialLinkText != '' ? functions.videopath2string(initialLinkText) : '');
     _model.linkFocusNode ??= FocusNode();
 
     animationsMap.addAll({
@@ -399,29 +393,40 @@ class _UpdaterewardsWidgetState extends State<UpdaterewardsWidget>
                                           ],
                                         ),
                                       ),
-                                      ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                        child: Image.network(
-                                          columnRewardsRow!.featuredImageUrl!,
-                                          width:
-                                              MediaQuery.sizeOf(context).width *
-                                                  1.0,
-                                          height: 200.0,
-                                          fit: BoxFit.cover,
-                                          errorBuilder:
-                                              (context, error, stackTrace) =>
-                                                  Image.asset(
-                                            'assets/images/error_image.jpg',
-                                            width: MediaQuery.sizeOf(context)
-                                                    .width *
-                                                1.0,
-                                            height: 200.0,
-                                            fit: BoxFit.cover,
-                                          ),
+                                      if (!_model.isImageDeleted)
+                                        Stack(
+                                          alignment:
+                                              AlignmentDirectional(1.0, -1.0),
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                              child: Image.network(
+                                                columnRewardsRow!
+                                                        .featuredImageUrl ??
+                                                    '',
+                                                width:
+                                                    MediaQuery.sizeOf(context)
+                                                            .width *
+                                                        1.0,
+                                                height: 200.0,
+                                                fit: BoxFit.cover,
+                                                errorBuilder: (context, error,
+                                                        stackTrace) =>
+                                                    Image.asset(
+                                                  'assets/images/error_image.jpg',
+                                                  width: MediaQuery.sizeOf(
+                                                              context)
+                                                          .width *
+                                                      1.0,
+                                                  height: 200.0,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
 
+                                          ],
                                         ),
-                                      ),
                                       Padding(
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             0.0, 8.0, 0.0, 0.0),
@@ -962,7 +967,7 @@ class _UpdaterewardsWidgetState extends State<UpdaterewardsWidget>
                                                                                     onTap: () async {
                                                                                       _model.apiResultps1Copy = await DeleteFileInBucketCall.call(
                                                                                         jwt: currentJwtToken,
-                                                                                        objectKey: rewardpayloadItem.objectkey,
+                                                                                        url: rewardpayloadItem.link,
                                                                                         churchId: FFAppState().partnershipUUID,
                                                                                       );
 
@@ -1051,7 +1056,7 @@ class _UpdaterewardsWidgetState extends State<UpdaterewardsWidget>
                                                                                     onTap: () async {
                                                                                       _model.apiResultps1CopyCopy = await DeleteFileInBucketCall.call(
                                                                                         jwt: currentJwtToken,
-                                                                                        objectKey: rewardpayloadItem.objectkey,
+                                                                                        url: rewardpayloadItem.link,
                                                                                         churchId: FFAppState().partnershipUUID,
                                                                                       );
 
