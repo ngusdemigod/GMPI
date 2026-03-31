@@ -22,6 +22,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'create_proj_model.dart';
+import '/flutter_flow/currency_formatter.dart';
 export 'create_proj_model.dart';
 
 class CreateProjWidget extends StatefulWidget {
@@ -541,7 +542,7 @@ class _CreateProjWidgetState extends State<CreateProjWidget>
                                 child: TextFormField(
                                   controller: _model.descriptionTextController,
                                   focusNode: _model.descriptionFocusNode,
-                                  autofocus: true,
+                                  autofocus: false,
                                   obscureText: false,
                                   decoration: InputDecoration(
                                     hintText: 'Description',
@@ -669,12 +670,14 @@ class _CreateProjWidgetState extends State<CreateProjWidget>
                                         Duration(milliseconds: 2000),
                                         () async {
                                           _model.amount = double.tryParse(_model
-                                              .tartgetamountTextController
-                                              .text);
+                                              .tartgetamountTextController.text
+                                              .replaceAll(
+                                                  RegExp(r'[^\d.]'), ''));
                                           safeSetState(() {});
                                         },
                                       ),
-                                      autofocus: true,
+                                      autofocus: false,
+                                      inputFormatters: [NairaCurrencyFormatter()],
                                       enabled: true,
                                       obscureText: false,
                                       decoration: InputDecoration(
@@ -1073,7 +1076,7 @@ class _CreateProjWidgetState extends State<CreateProjWidget>
                                             objectKey == null) {
                                           showUploadMessage(
                                             context,
-                                            'Failed to get upload URL',
+                                            'Upload Failed',
                                           );
                                           return;
                                         }
@@ -1102,7 +1105,7 @@ class _CreateProjWidgetState extends State<CreateProjWidget>
                                                   : bodyText);
                                           showUploadMessage(
                                             context,
-                                            'Image upload failed (${statusCode ?? 'unknown'}). $trimmed',
+                                            'Server Error, Contact Admin',
                                           );
                                           return;
                                         }
@@ -1129,6 +1132,7 @@ class _CreateProjWidgetState extends State<CreateProjWidget>
                                               '${FFAppState().storagePuburl}$objectKey',
                                           'created_by': currentUserUid,
                                           'currency': FFAppState().currency,
+                                          'church_id': FFAppState().partnershipUUID,
                                         });
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
@@ -1237,7 +1241,7 @@ class _CreateProjWidgetState extends State<CreateProjWidget>
                                             objectKey == null) {
                                           showUploadMessage(
                                             context,
-                                            'Failed to get upload URL',
+                                            'Server Error, Contact Admin',
                                           );
                                           return;
                                         }

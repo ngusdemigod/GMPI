@@ -13,6 +13,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'create_plan_model.dart';
+import '/flutter_flow/currency_formatter.dart';
 export 'create_plan_model.dart';
 
 class CreatePlanWidget extends StatefulWidget {
@@ -354,7 +355,7 @@ class _CreatePlanWidgetState extends State<CreatePlanWidget>
                                       controller:
                                           _model.descriptionTextController,
                                       focusNode: _model.descriptionFocusNode,
-                                      autofocus: true,
+                                      autofocus: false,
                                       obscureText: false,
                                       decoration: InputDecoration(
                                         hintText: 'Description',
@@ -460,7 +461,10 @@ class _CreatePlanWidgetState extends State<CreatePlanWidget>
                                                   .projectNameTextController2,
                                               focusNode:
                                                   _model.projectNameFocusNode2,
-                                              autofocus: true,
+                                              autofocus: false,
+                                              inputFormatters: [
+                                                NairaCurrencyFormatter()
+                                              ],
                                               obscureText: false,
                                               decoration: InputDecoration(
                                                 hintText: 'Min. Amount',
@@ -588,7 +592,10 @@ class _CreatePlanWidgetState extends State<CreatePlanWidget>
                                                   .projectNameTextController3,
                                               focusNode:
                                                   _model.projectNameFocusNode3,
-                                              autofocus: true,
+                                              autofocus: false,
+                                              inputFormatters: [
+                                                NairaCurrencyFormatter()
+                                              ],
                                               obscureText: false,
                                               decoration: InputDecoration(
                                                 hintText: 'Max. Amount',
@@ -784,11 +791,13 @@ class _CreatePlanWidgetState extends State<CreatePlanWidget>
                                             'description': _model
                                                 .descriptionTextController.text,
                                             'amountLOW': int.tryParse(_model
-                                                .projectNameTextController2
-                                                .text),
+                                                .projectNameTextController2.text
+                                                .replaceAll(
+                                                    RegExp(r'[^\d]'), '')),
                                             'amountHIGH': int.tryParse(_model
-                                                .projectNameTextController3
-                                                .text),
+                                                .projectNameTextController3.text
+                                                .replaceAll(
+                                                    RegExp(r'[^\d]'), '')),
                                             'churchID':
                                                 FFAppState().partnershipUUID,
                                             'status': _model.checkboxValue,

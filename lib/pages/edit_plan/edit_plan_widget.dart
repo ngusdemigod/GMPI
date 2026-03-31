@@ -457,7 +457,7 @@ class _EditPlanWidgetState extends State<EditPlanWidget>
                                 child: TextFormField(
                                   controller: _model.descriptionTextController,
                                   focusNode: _model.descriptionFocusNode,
-                                  autofocus: true,
+                                  autofocus: false,
                                   obscureText: false,
                                   decoration: InputDecoration(
                                     hintText: 'Description',

@@ -437,7 +437,7 @@ class _EditWidgetState extends State<EditWidget> with TickerProviderStateMixin {
                                 child: TextFormField(
                                   controller: _model.descriptionTextController,
                                   focusNode: _model.descriptionFocusNode,
-                                  autofocus: true,
+                                  autofocus: false,
                                   obscureText: false,
                                   decoration: InputDecoration(
                                     hintText: 'Enter reward title',
@@ -528,7 +528,7 @@ class _EditWidgetState extends State<EditWidget> with TickerProviderStateMixin {
                                 child: TextFormField(
                                   controller: _model.projectURLTextController,
                                   focusNode: _model.projectURLFocusNode,
-                                  autofocus: true,
+                                  autofocus: false,
                                   obscureText: false,
                                   decoration: InputDecoration(
                                     hintText: 'Enter reward title',
@@ -619,7 +619,7 @@ class _EditWidgetState extends State<EditWidget> with TickerProviderStateMixin {
                                 child: TextFormField(
                                   controller: _model.clonableURLTextController,
                                   focusNode: _model.clonableURLFocusNode,
-                                  autofocus: true,
+                                  autofocus: false,
                                   obscureText: false,
                                   decoration: InputDecoration(
                                     hintText: 'Enter reward title',

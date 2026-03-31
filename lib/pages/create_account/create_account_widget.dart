@@ -357,7 +357,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                         controller:
                                             _model.lastnameTextController,
                                         focusNode: _model.lastnameFocusNode,
-                                        autofocus: true,
+                                        autofocus: false,
                                         autofillHints: [AutofillHints.name],
                                         textCapitalization:
                                             TextCapitalization.words,
@@ -463,7 +463,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                       child: TextFormField(
                                         controller: _model.phoneTextController,
                                         focusNode: _model.phoneFocusNode,
-                                        autofocus: true,
+                                        autofocus: false,
                                         autofillHints: [
                                           AutofillHints.telephoneNumber
                                         ],
@@ -560,7 +560,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                         controller:
                                             _model.emailAddressTextController,
                                         focusNode: _model.emailAddressFocusNode,
-                                        autofocus: true,
+                                        autofocus: false,
                                         autofillHints: [AutofillHints.email],
                                         obscureText: false,
                                         decoration: InputDecoration(
@@ -656,7 +656,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                         controller:
                                             _model.passwordTextController,
                                         focusNode: _model.passwordFocusNode,
-                                        autofocus: true,
+                                        autofocus: false,
                                         autofillHints: [AutofillHints.password],
                                         obscureText: !_model.passwordVisibility,
                                         decoration: InputDecoration(
@@ -770,7 +770,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                             .passwordConfirmTextController,
                                         focusNode:
                                             _model.passwordConfirmFocusNode,
-                                        autofocus: true,
+                                        autofocus: false,
                                         autofillHints: [AutofillHints.password],
                                         obscureText:
                                             !_model.passwordConfirmVisibility,

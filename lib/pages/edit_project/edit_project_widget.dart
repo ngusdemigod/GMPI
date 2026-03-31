@@ -1,9 +1,10 @@
-import '/backend/supabase/supabase.dart';
+﻿import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/flutter_flow/currency_formatter.dart';
 import 'dart:math';
 import 'dart:ui';
 import '/flutter_flow/custom_functions.dart' as functions;
@@ -587,7 +588,7 @@ class _EditProjectWidgetState extends State<EditProjectWidget>
                                 child: TextFormField(
                                   controller: _model.descriptionTextController,
                                   focusNode: _model.descriptionFocusNode,
-                                  autofocus: true,
+                                  autofocus: false,
                                   obscureText: false,
                                   decoration: InputDecoration(
                                     hintText: 'Description',
@@ -681,7 +682,7 @@ class _EditProjectWidgetState extends State<EditProjectWidget>
                                   controller:
                                       _model.tartgetamountTextController,
                                   focusNode: _model.tartgetamountFocusNode,
-                                  autofocus: true,
+                                  autofocus: false,
                                   enabled: true,
                                   obscureText: false,
                                   decoration: InputDecoration(
@@ -767,6 +768,9 @@ class _EditProjectWidgetState extends State<EditProjectWidget>
                                   validator: _model
                                       .tartgetamountTextControllerValidator
                                       .asValidator(context),
+                                  inputFormatters: [
+                                    NairaCurrencyFormatter(),
+                                  ],
                                 ),
                               ),
                               Row(
@@ -1215,3 +1219,5 @@ class _EditProjectWidgetState extends State<EditProjectWidget>
     );
   }
 }
+
+

@@ -567,7 +567,7 @@ class _UpdaterewardsWidgetState extends State<UpdaterewardsWidget>
                                                           milliseconds: 900),
                                                       () => safeSetState(() {}),
                                                     ),
-                                                    autofocus: true,
+                                                    autofocus: false,
                                                     obscureText: false,
                                                     decoration: InputDecoration(
                                                       hintText:
@@ -717,7 +717,7 @@ class _UpdaterewardsWidgetState extends State<UpdaterewardsWidget>
                                                                 .linkTextController,
                                                             focusNode: _model
                                                                 .linkFocusNode,
-                                                            autofocus: true,
+                                                            autofocus: false,
                                                             obscureText: false,
                                                             decoration:
                                                                 InputDecoration(

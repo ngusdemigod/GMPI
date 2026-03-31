@@ -459,7 +459,7 @@ class GetUploadURLCall {
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${jwt}',
+        'Authorization': 'Bearer $jwt',
       },
       params: {},
       body: ffApiRequestBody,
@@ -499,8 +499,7 @@ class UploadToBucketCall {
           'https://mserfaaywuivgptfodcp.supabase.co/functions/v1/uploadtor2',
       callType: ApiCallType.POST,
       headers: {
-        'Authorization': 'Bearer ${jwt}',
-        'Content-Type': 'multipart/form-data',
+        'Authorization': 'Bearer $jwt',
       },
       params: {
         'file': file,
@@ -534,7 +533,7 @@ class DeleteFileInBucketCall {
           'https://mserfaaywuivgptfodcp.supabase.co/functions/v1/deleteimageinbucket',
       callType: ApiCallType.POST,
       headers: {
-        'Authorization': 'Bearer ${jwt}',
+        'Authorization': 'Bearer $jwt',
         'Content-Type': 'application/json',
       },
       params: {},

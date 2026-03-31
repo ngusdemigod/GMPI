@@ -1,4 +1,4 @@
-import '/auth/supabase_auth/auth_util.dart';
+﻿import '/auth/supabase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/schema/structs/index.dart';
 import '/backend/supabase/supabase.dart';
@@ -550,7 +550,7 @@ class _CreateRewardsWidgetState extends State<CreateRewardsWidget>
                                                   Duration(milliseconds: 900),
                                                   () => safeSetState(() {}),
                                                 ),
-                                                autofocus: true,
+                                                autofocus: false,
                                                 obscureText: false,
                                                 decoration: InputDecoration(
                                                   hintText:
@@ -689,7 +689,7 @@ class _CreateRewardsWidgetState extends State<CreateRewardsWidget>
                                                             .linkTextController,
                                                         focusNode: _model
                                                             .linkFocusNode,
-                                                        autofocus: true,
+                                                        autofocus: false,
                                                         obscureText: false,
                                                         decoration:
                                                             InputDecoration(
@@ -1225,7 +1225,7 @@ class _CreateRewardsWidgetState extends State<CreateRewardsWidget>
 
                                                                       // Upload 2 bucket
                                                                       _model.upload2bucket =
-                                                                          await UploadToBucketCall
+                                                                           await UploadToBucketCall
                                                                               .call(
                                                                         url: GetUploadURLCall
                                                                             .uploadurl(
@@ -1404,11 +1404,11 @@ class _CreateRewardsWidgetState extends State<CreateRewardsWidget>
                                                                       }
                                                                     }
 
-                                                                    if (!((_model.uploadedLocalFile_uploadDataPdf ==
+                                                                    if (!((_model.uploadedLocalFile_uploadDataAudio ==
                                                                                 null ||
-                                                                            (_model.uploadedLocalFile_uploadDataPdf.bytes?.isEmpty ??
+                                                                            (_model.uploadedLocalFile_uploadDataAudio.bytes?.isEmpty ??
                                                                                 true)) ||
-                                                                        (_model.urls.where((e) => e.title == _model.uploadedLocalFile_uploadDataPdf.originalFilename).toList().length.toString() ==
+                                                                        (_model.urls.where((e) => e.title == _model.uploadedLocalFile_uploadDataAudio.originalFilename).toList().length.toString() ==
                                                                             '1'))) {
                                                                       // Reward type
                                                                       FFAppState()
@@ -1437,10 +1437,14 @@ class _CreateRewardsWidgetState extends State<CreateRewardsWidget>
                                                                             .originalFilename,
                                                                         jwt:
                                                                             currentJwtToken,
-                                                                      );
+                                                                         
+                                                                         contenttype: 
+                                                                             'audio/mpeg',
+                                                                       );
 
                                                                       // Upload 2 bucket
-                                                                      await UploadToBucketCall
+                                                                      _model.upload2bucket =
+                                                                           await UploadToBucketCall
                                                                           .call(
                                                                         url: GetUploadURLCall
                                                                             .uploadurl(
@@ -1448,7 +1452,7 @@ class _CreateRewardsWidgetState extends State<CreateRewardsWidget>
                                                                               ''),
                                                                         ),
                                                                         file: _model
-                                                                            .uploadedLocalFile_uploadDataPdf,
+                                                                            .uploadedLocalFile_uploadDataAudio,
                                                                         jwt:
                                                                             currentJwtToken,
                                                                       );
@@ -1460,12 +1464,12 @@ class _CreateRewardsWidgetState extends State<CreateRewardsWidget>
                                                                             .uploadedLocalFile_uploadDataAudio
                                                                             .originalFilename,
                                                                         link:
-                                                                            '${FFAppState().storagePuburl}${GetUploadURLCall.uploadurl(
+                                                                            '${FFAppState().storagePuburl}${GetUploadURLCall.objectkey(
                                                                           (_model.signAUDIO?.jsonBody ??
                                                                               ''),
                                                                         )}',
                                                                         objectkey:
-                                                                            GetUploadURLCall.uploadurl(
+                                                                            GetUploadURLCall.objectkey(
                                                                           (_model.signAUDIO?.jsonBody ??
                                                                               ''),
                                                                         ),
@@ -2234,3 +2238,7 @@ class _CreateRewardsWidgetState extends State<CreateRewardsWidget>
     );
   }
 }
+
+
+
+
