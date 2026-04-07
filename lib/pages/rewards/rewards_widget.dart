@@ -730,6 +730,7 @@ class _RewardsWidgetState extends State<RewardsWidget>
                                                 ].divide(SizedBox(height: 4.0)),
                                             ),
                                           ),
+                                        ),
                                           IconButton(
                                             icon: Icon(
                                               Icons.delete_outline_rounded,
@@ -760,7 +761,7 @@ class _RewardsWidgetState extends State<RewardsWidget>
                                                 await RewardsTable().delete(
                                                   matchingRows: (rows) => rows.eq(
                                                     'id',
-                                                    columnRewardsWithStatsRow.id,
+                                                    columnRewardsWithStatsRow.id!,
                                                   ),
                                                 );
                                                 await _model.fetchNextPage(isRefresh: true);

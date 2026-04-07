@@ -167,37 +167,86 @@ class _PlandetailsWidgetState extends State<PlandetailsWidget> {
                                   .titleSmallIsCustom,
                             ),
                       ),
-                    InkWell(
-                      splashColor: Colors.transparent,
-                      focusColor: Colors.transparent,
-                      hoverColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      onTap: () async {
-                        await showModalBottomSheet(
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          context: context,
-                          builder: (context) {
-                            return WebViewAware(
-                              child: Padding(
-                                padding: MediaQuery.viewInsetsOf(context),
-                                child: EditPlanWidget(
-                                  id: widget!.id!,
-                                  status: columnPartnershipPLANSRow!.status,
-                                  title: columnPartnershipPLANSRow?.title,
-                                  description:
-                                      columnPartnershipPLANSRow?.description,
-                                ),
-                              ),
-                            );
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        InkWell(
+                          splashColor: Colors.transparent,
+                          focusColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onTap: () async {
+                            await showModalBottomSheet(
+                              isScrollControlled: true,
+                              backgroundColor: Colors.transparent,
+                              context: context,
+                              builder: (context) {
+                                return WebViewAware(
+                                  child: Padding(
+                                    padding: MediaQuery.viewInsetsOf(context),
+                                    child: EditPlanWidget(
+                                      id: widget!.id!,
+                                      status: columnPartnershipPLANSRow!.status,
+                                      title: columnPartnershipPLANSRow?.title,
+                                      description:
+                                          columnPartnershipPLANSRow?.description,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ).then((value) => safeSetState(() {}));
                           },
-                        ).then((value) => safeSetState(() {}));
-                      },
-                      child: FaIcon(
-                        FontAwesomeIcons.pencilAlt,
-                        color: FlutterFlowTheme.of(context).primaryText,
-                        size: 20.0,
-                      ),
+                          child: FaIcon(
+                            FontAwesomeIcons.pencilAlt,
+                            color: FlutterFlowTheme.of(context).primaryText,
+                            size: 20.0,
+                          ),
+                        ),
+                        SizedBox(width: 16.0),
+                        InkWell(
+                          splashColor: Colors.transparent,
+                          focusColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onTap: () async {
+                            final confirm = await showDialog<bool>(
+                              context: context,
+                              builder: (alertDialogContext) {
+                                return AlertDialog(
+                                  title: Text('Delete Plan'),
+                                  content: Text('Are you sure you want to delete this plan?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(alertDialogContext, false),
+                                      child: Text('Cancel'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(alertDialogContext, true),
+                                      child: Text('Confirm'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ) ?? false;
+                            if (confirm) {
+                              await PartnershipPLANSTable().delete(
+                                matchingRows: (rows) => rows.eqOrNull('id', widget!.id),
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Plan deleted successfully'),
+                                ),
+                              );
+                              context.safePop();
+                            }
+                          },
+                          child: Icon(
+                            Icons.delete_outline,
+                            color: FlutterFlowTheme.of(context).error,
+                            size: 24.0,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
